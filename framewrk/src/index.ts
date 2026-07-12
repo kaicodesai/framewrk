@@ -1,4 +1,5 @@
-// Trigger initial Git-connected deploy for the framewrk Worker.
+// Trigger deploy: verifying Cloudflare's Git connection after migrating to
+// the standalone kaicodesai/framewrk repo (main branch).
 import type { Env, BuildJobMessage } from "./types";
 import { isAuthorized } from "./lib/auth";
 import { json, notFound, unauthorized } from "./lib/http";
