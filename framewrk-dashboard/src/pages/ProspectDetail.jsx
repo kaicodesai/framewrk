@@ -383,26 +383,32 @@ export default function ProspectDetail() {
         <div className="md:col-span-1 space-y-6">
           <BusinessInfoPanel prospect={prospect} onSaved={load} />
 
-          {!hasActiveBuild && (
-            <Panel className="p-6 space-y-3">
-              <div className="label-caps mb-1">Start a build</div>
-              <Button
-                className="w-full"
-                disabled={buildingTier !== null}
-                onClick={() => handleBuild('website')}
-              >
-                {buildingTier === 'website' ? 'Starting…' : 'Build website'}
-              </Button>
-              <Button
-                variant="ghost"
-                className="w-full"
-                disabled={buildingTier !== null}
-                onClick={() => handleBuild('website_dashboard')}
-              >
-                {buildingTier === 'website_dashboard' ? 'Starting…' : 'Build website + dashboard'}
-              </Button>
-            </Panel>
-          )}
+          <Panel className="p-6 space-y-3">
+            <div className="label-caps mb-1">
+              {hasActiveBuild ? 'Start a new build' : 'Start a build'}
+            </div>
+            {hasActiveBuild && (
+              <div className="text-xs text-muted font-mono mb-1">
+                Regenerates the design brief and build prompt from scratch — useful for testing
+                prompt changes without creating a new prospect. The previous build stays in history.
+              </div>
+            )}
+            <Button
+              className="w-full"
+              disabled={buildingTier !== null}
+              onClick={() => handleBuild('website')}
+            >
+              {buildingTier === 'website' ? 'Starting…' : 'Build website'}
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full"
+              disabled={buildingTier !== null}
+              onClick={() => handleBuild('website_dashboard')}
+            >
+              {buildingTier === 'website_dashboard' ? 'Starting…' : 'Build website + dashboard'}
+            </Button>
+          </Panel>
 
           <Button variant="danger" className="w-full" onClick={handleMarkLost}>
             Mark as lost
