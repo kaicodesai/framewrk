@@ -191,14 +191,18 @@ function BusinessInfoPanel({ prospect, onSaved }) {
         <div>
           <dt className="text-faint font-mono text-xs">google maps</dt>
           <dd>
-            <a
-              href={prospect.google_maps_url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-acid-text underline break-all text-xs font-mono"
-            >
-              view listing
-            </a>
+            {prospect.google_maps_url ? (
+              <a
+                href={prospect.google_maps_url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-acid-text underline break-all text-xs font-mono"
+              >
+                view listing
+              </a>
+            ) : (
+              <span className="text-ink text-xs font-mono">— (added manually)</span>
+            )}
           </dd>
         </div>
         {prospect.notes && (

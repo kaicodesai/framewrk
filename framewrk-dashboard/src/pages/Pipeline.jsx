@@ -12,7 +12,9 @@ export default function Pipeline() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const [mode, setMode] = useState('maps') // 'maps' | 'manual'
   const [mapsUrl, setMapsUrl] = useState('')
+  const [businessName, setBusinessName] = useState('')
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [formError, setFormError] = useState(null)
@@ -37,12 +39,18 @@ export default function Pipeline() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    if (!mapsUrl.trim()) return
+    if (mode === 'maps' && !mapsUrl.trim()) return
+    if (mode === 'manual' && !businessName.trim()) return
     setSubmitting(true)
     setFormError(null)
     try {
-      await api.createProspect(mapsUrl.trim(), notes.trim() || undefined)
+      await api.createProspect({
+        google_maps_url: mode === 'maps' ? mapsUrl.trim() : undefined,
+        business_name: mode === 'manual' ? businessName.trim() : undefined,
+        notes: notes.trim() || undefined,
+      })
       setMapsUrl('')
+      setBusinessName('')
       setNotes('')
       await load()
     } catch (err) {
@@ -75,21 +83,50 @@ export default function Pipeline() {
       </div>
 
       <Panel className="p-6 mb-10">
-        <div className="label-caps mb-4">New prospect</div>
+        <div className="flex items-center justify-between mb-4">
+          <div className="label-caps">New prospect</div>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant={mode === 'maps' ? 'primary' : 'ghost'}
+              onClick={() => setMode('maps')}
+            >
+              Google Maps link
+            </Button>
+            <Button
+              type="button"
+              variant={mode === 'manual' ? 'primary' : 'ghost'}
+              onClick={() => setMode('manual')}
+            >
+              Manual entry
+            </Button>
+          </div>
+        </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="url"
-            required
-            value={mapsUrl}
-            onChange={(e) => setMapsUrl(e.target.value)}
-            placeholder="paste Google Maps / Business Profile link"
-            className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
-          />
+          {mode === 'maps' ? (
+            <input
+              type="url"
+              required
+              value={mapsUrl}
+              onChange={(e) => setMapsUrl(e.target.value)}
+              placeholder="paste Google Maps / Business Profile link"
+              className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+            />
+          ) : (
+            <input
+              type="text"
+              required
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              placeholder="business name — e.g. a referral not found on Google Maps"
+              className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+            />
+          )}
           <input
             type="text"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="notes (optional) — no website, looked busy, etc."
+            placeholder="notes (optional) — category, address, phone, no website, etc."
             className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
           />
           <div className="flex items-center justify-between">
@@ -108,7 +145,7 @@ export default function Pipeline() {
 
       {!loading && !error && prospects.length === 0 && (
         <div className="font-mono text-sm text-muted border border-line p-6">
-          Nothing here yet — submit your first Google Maps link above.
+          Nothing here yet — submit your first prospect above, via Google Maps link or manual entry.
         </div>
       )}
 

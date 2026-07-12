@@ -12,15 +12,38 @@ function nowIso(): string {
 
 export async function createProspect(request: Request, env: Env): Promise<Response> {
   const body = (await request.json().catch(() => null)) as
-    | { google_maps_url?: string; notes?: string }
+    | {
+        google_maps_url?: string;
+        business_name?: string;
+        category?: string;
+        address?: string;
+        phone?: string;
+        notes?: string;
+      }
     | null;
 
-  if (!body?.google_maps_url) {
-    return badRequest("google_maps_url is required");
+  if (!body?.google_maps_url && !body?.business_name) {
+    return badRequest("Either google_maps_url or business_name is required");
   }
 
-  const parsed = await parseGoogleMapsUrl(body.google_maps_url);
-  const details = await lookupPlaceDetails(env, parsed);
+  // Manually-added clients (referrals, walk-ins) may not have a Google Maps
+  // listing at all — the lookup below is skipped entirely in that case, and
+  // any fields the founder typed in are used as-is.
+  let businessName = body.business_name ?? null;
+  let category = body.category ?? null;
+  let address = body.address ?? null;
+  let phone = body.phone ?? null;
+  let photoReferences: string[] = [];
+
+  if (body.google_maps_url) {
+    const parsed = await parseGoogleMapsUrl(body.google_maps_url);
+    const details = await lookupPlaceDetails(env, parsed);
+    businessName = body.business_name ?? details.business_name;
+    category = body.category ?? details.category;
+    address = body.address ?? details.address;
+    phone = body.phone ?? details.phone;
+    photoReferences = details.photo_references;
+  }
 
   const id = newId();
   const timestamp = nowIso();
@@ -33,12 +56,12 @@ export async function createProspect(request: Request, env: Env): Promise<Respon
   )
     .bind(
       id,
-      body.google_maps_url,
-      details.business_name,
-      details.category,
-      details.address,
-      details.phone,
-      JSON.stringify(details.photo_references),
+      body.google_maps_url ?? "",
+      businessName,
+      category,
+      address,
+      phone,
+      JSON.stringify(photoReferences),
       null,
       body.notes ?? null,
       timestamp,

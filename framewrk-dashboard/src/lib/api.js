@@ -42,10 +42,10 @@ async function request(path, options = {}) {
 
 export const api = {
   listProspects: () => request('/prospects'),
-  createProspect: (googleMapsUrl, notes) =>
+  createProspect: (fields) =>
     request('/prospects', {
       method: 'POST',
-      body: JSON.stringify({ google_maps_url: googleMapsUrl, notes }),
+      body: JSON.stringify(fields),
     }),
   getProspect: (id) => request(`/prospects/${id}`),
   updateProspect: (id, fields) =>
