@@ -1,0 +1,40 @@
+name = "framewrk"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+
+# --- D1 database -------------------------------------------------------
+# Create with: wrangler d1 create framewrk-db
+# Then paste the returned database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "framewrk-db"
+database_id = "d8c860bd-c9c7-4169-8f1a-a9329ab28caa"
+
+# --- R2 bucket (generated site files + handover packages) --------------
+# Deliberately not provisioned yet — R2 requires adding a Cloudflare
+# billing subscription (even for free-tier usage), and nothing built so
+# far actually reads/writes SITES_BUCKET. Add this back once the
+# website-builder-agent/preview-deploy-agent stages are built and R2
+# (or a no-billing alternative) is actually needed:
+#
+# [[r2_buckets]]
+# binding = "SITES_BUCKET"
+# bucket_name = "framewrk-sites"
+
+# --- Queue (background pipeline) ----------------------------------------
+# Create with: wrangler queues create framewrk-build-pipeline
+[[queues.producers]]
+binding = "BUILD_QUEUE"
+queue = "framewrk-build-pipeline"
+
+[[queues.consumers]]
+queue = "framewrk-build-pipeline"
+max_batch_size = 1
+max_retries = 3
+
+# --- Secrets (set with `wrangler secret put <NAME>`, never in this file) -
+# FRAMEWRK_DASHBOARD_TOKEN
+# OPENROUTER_API_KEY
+# GOOGLE_PLACES_API_KEY
+# STRIPE_SECRET_KEY
+# STRIPE_WEBHOOK_SECRET

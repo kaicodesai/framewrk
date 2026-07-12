@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #F7F6F2;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-acid text-ink;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-paper;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-line;
+  }
+}
+
+@layer utilities {
+  .label-caps {
+    @apply font-mono text-[11px] uppercase tracking-widest2 text-muted;
+  }
+
+  .grid-noise {
+    background-image:
+      linear-gradient(to right, rgba(0,0,0,0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0,0,0,0.045) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+}

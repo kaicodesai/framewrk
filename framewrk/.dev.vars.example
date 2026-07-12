@@ -1,0 +1,8 @@
+## Copy this file to .dev.vars (gitignored) for local `wrangler dev` use.
+## In production these are set with `wrangler secret put <NAME>`, never committed.
+
+FRAMEWRK_DASHBOARD_TOKEN=dev-local-token
+OPENROUTER_API_KEY=
+GOOGLE_PLACES_API_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
