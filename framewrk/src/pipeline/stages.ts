@@ -118,8 +118,14 @@ async function runGenerating(env: Env, message: BuildJobMessage): Promise<void> 
       "(2) at least one element per major section visually breaks out of the centered content container " +
       "(e.g. a full-bleed image or color block using a 100vw/negative-margin breakout technique), and " +
       "feature/offering sections use irregular, unequal column spans rather than a symmetric row of equal-" +
-      "width cards — a generic evenly-spaced three- or four-card grid is explicitly not acceptable. Output " +
-      "ONLY the prompt text — no preamble, no markdown fencing, no commentary about what you wrote.",
+      "width cards — a generic evenly-spaced three- or four-card grid is explicitly not acceptable; " +
+      "(3) every major section (hero, philosophy/manifesto, each feature/offering block or between offering " +
+      "pairs, process, footer) includes at least one distinct image or illustrative visual of its own — a " +
+      "page carrying most of its content as pure typography/color blocks with only one or two images total " +
+      "for the whole site is not acceptable. Vary the imagery treatment across sections (some full-bleed " +
+      "photographic, some smaller inline illustrative accents, different AI-image prompts per section) " +
+      "rather than reusing the same one or two visuals throughout. Output ONLY the prompt text — no " +
+      "preamble, no markdown fencing, no commentary about what you wrote.",
     user:
       `Business: ${prospect.business_name ?? "Unknown"}\n` +
       `Category: ${prospect.category ?? "Unknown"}\n` +
