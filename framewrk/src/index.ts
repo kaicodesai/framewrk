@@ -1,5 +1,5 @@
-// Trigger deploy: verifying Cloudflare's Git connection after migrating to
-// the standalone kaicodesai/framewrk repo (main branch).
+// Trigger deploy: retry after fixing the Worker's Root Directory setting
+// (was "/", corrected to "framewrk") following the repo migration.
 import type { Env, BuildJobMessage } from "./types";
 import { isAuthorized } from "./lib/auth";
 import { json, notFound, unauthorized } from "./lib/http";
