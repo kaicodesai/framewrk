@@ -43,10 +43,16 @@ async function runBrandDesign(env: Env, message: BuildJobMessage): Promise<void>
 
   const raw = await completeChat(env, {
     system:
-      "You are a senior brand and graphic designer known for bold, avant-garde, agency-quality work — think Nike, not a generic template. " +
+      "You are a senior brand and graphic designer known for bold, avant-garde, agency-quality work — " +
+      "Awwwards Site-of-the-Day caliber, never a generic template or reskinned SaaS dark-mode layout. " +
       "Given a local business, produce a design brief as strict JSON with keys: " +
       '"palette" (array of 3-5 hex colors), "typography" (object with "heading" and "body" font names), ' +
-      '"tone" (array of 3-5 adjectives), "layout_direction" (2-3 sentences on layout/visual style). ' +
+      '"tone" (array of 3-5 adjectives), "layout_direction" (3-4 sentences that MUST name one specific, ' +
+      "concrete structural device unique to this build — e.g. a diagonal section divider, a scroll-linked " +
+      "split-screen, an interrupted grid with irregular column spans, a marquee/ticker strip, an oversized " +
+      "rotated element — chosen to fit this business's niche and mood, not a reused 'asymmetric grid + big " +
+      "type' recipe. The layout_direction must also state that any decorative overlapping element is only " +
+      "ever placed over genuinely empty space and must never cover or reduce legibility of body text). " +
       "Output ONLY the JSON object, no markdown fencing, no commentary.",
     user: `Business: ${prospect.business_name ?? "Unknown"}\nCategory: ${prospect.category ?? "Unknown"}\nNotes: ${prospect.notes ?? "None"}`,
   });
@@ -103,9 +109,17 @@ async function runGenerating(env: Env, message: BuildJobMessage): Promise<void> 
       "a complete, polished, avant-garde/agency-quality static website — plain HTML/CSS/vanilla JS, no build " +
       "step, no framework, no dependencies, mobile-responsive, ready to deploy directly to Cloudflare Pages. " +
       "Include: an appropriate page structure for the business's niche, specific brand direction (colors, " +
-      "fonts, tone) drawn from the provided design brief, copywriting guidance, and an instruction to use " +
-      "AI-generated placeholder imagery if no real photos are supplied. Output ONLY the prompt text — no " +
-      "preamble, no markdown fencing, no commentary about what you wrote.",
+      "fonts, tone, and the one structural device named in the design brief) drawn from the provided design " +
+      "brief, copywriting guidance, and an instruction to use AI-generated placeholder imagery if no real " +
+      "photos are supplied. The prompt you write MUST state these two constraints explicitly and " +
+      "non-negotiably: (1) any decorative or overlapping visual element (tags, rotated blocks, oversized " +
+      "numerals, pull-quotes, etc.) is positioned only over genuinely empty space and must never overlap or " +
+      "obscure body copy or headline text at any breakpoint — check this before considering the build done; " +
+      "(2) at least one element per major section visually breaks out of the centered content container " +
+      "(e.g. a full-bleed image or color block using a 100vw/negative-margin breakout technique), and " +
+      "feature/offering sections use irregular, unequal column spans rather than a symmetric row of equal-" +
+      "width cards — a generic evenly-spaced three- or four-card grid is explicitly not acceptable. Output " +
+      "ONLY the prompt text — no preamble, no markdown fencing, no commentary about what you wrote.",
     user:
       `Business: ${prospect.business_name ?? "Unknown"}\n` +
       `Category: ${prospect.category ?? "Unknown"}\n` +
