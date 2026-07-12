@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "framewrk",
+  "compatibility_date": "2026-07-12",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "framewrk-dashboard"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
