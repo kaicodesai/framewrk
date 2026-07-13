@@ -14,6 +14,16 @@
 
 <a class="skip-link" href="#main">Skip to content</a>
 
+<!-- continuous background canvas: gradient mesh + glow blobs, shared by whole page -->
+<div class="bg-canvas" aria-hidden="true">
+  <span class="glow glow-teal" style="top:2%; left:-8%;"></span>
+  <span class="glow glow-orange" style="top:18%; right:-10%;"></span>
+  <span class="glow glow-teal glow-lg" style="top:42%; left:-14%;"></span>
+  <span class="glow glow-orange glow-sm" style="top:60%; right:-6%;"></span>
+  <span class="glow glow-teal" style="top:78%; left:-8%;"></span>
+  <span class="glow glow-navy glow-lg" style="top:94%; right:-10%;"></span>
+</div>
+
 <!-- ============ HEADER ============ -->
 <header class="site-header" id="top">
   <div class="header-inner">
@@ -24,7 +34,7 @@
       <a href="#process">Process</a>
       <a href="#contact">Contact</a>
     </nav>
-    <a href="#contact" class="btn btn-header">Book a Visit</a>
+    <a href="#contact" class="btn btn-primary btn-header">Book a Visit</a>
     <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">
       <span></span><span></span><span></span>
     </button>
@@ -33,47 +43,45 @@
 
 <main id="main">
 
-  <!-- ============ HERO ============ -->
+  <!-- ============ HERO — cinematic single focal point ============ -->
   <section class="hero">
-    <div class="container hero-inner">
-      <p class="eyebrow">Chiropractic Care &amp; Hyperbaric Oxygen Therapy</p>
-      <h1 class="hero-headline">Restore the<br>Architecture<br>of Your Health</h1>
-      <p class="hero-sub">Precision vertebral alignment meets cellular oxygenation. Hands On Wellness pairs hands-on chiropractic craft with hyperbaric oxygen therapy to recalibrate the nervous system, accelerate recovery, and return the body to its intended structure — one deliberate adjustment at a time.</p>
-      <div class="hero-cta-row">
+    <div class="container hero-stack">
+      <p class="kicker" data-reveal>Chiropractic Care &amp; Hyperbaric Oxygen Therapy</p>
+      <h1 class="hero-headline" data-reveal>
+        Restore the Architecture<br><span class="accent-soft">of Your Health</span>
+      </h1>
+      <p class="lede" data-reveal>Precision vertebral alignment meets cellular oxygenation. Hands On Wellness pairs hands-on chiropractic craft with hyperbaric oxygen therapy to recalibrate the nervous system and return the body to its intended structure.</p>
+      <div class="cta-row" data-reveal>
         <a href="#contact" class="btn btn-primary">Schedule a Consultation</a>
-        <a href="#modalities" class="btn btn-ghost">Explore Modalities ↓</a>
+        <a href="#modalities" class="btn btn-ghost">Explore Modalities</a>
       </div>
     </div>
 
-    <div class="bleed hero-band">
-      <div class="bubble-field" aria-hidden="true">
-        <span class="bubble b1"></span>
-        <span class="bubble b2"></span>
-        <span class="bubble b3"></span>
-        <span class="bubble b4"></span>
-        <span class="bubble b5"></span>
-      </div>
-      <div class="container hero-band-inner">
-        <p class="hero-band-text">Pressurized calm. Grounded science. A practice built around the quiet, exact work of putting the body back in order.</p>
+    <div class="hero-visual" data-reveal>
+      <img
+        class="hero-image mask-fade-bottom"
+        data-parallax="0.06"
+        src="https://image.pollinations.ai/prompt/cinematic%20editorial%20photograph%20of%20a%20serene%20chiropractic%20wellness%20studio%2C%20soft%20natural%20light%2C%20deep%20navy%20and%20warm%20cream%20tones%2C%20a%20practitioner%20gently%20guiding%20a%20patient%27s%20posture%2C%20shallow%20depth%20of%20field%2C%20high-end%20wellness%20magazine%20photography?width=1600&height=1000&nologo=true"
+        alt="Editorial photograph of a calm chiropractic wellness studio bathed in soft natural light"
+        loading="lazy" width="1600" height="1000">
+      <div class="floating-card glass glass-dark card-rotate-l" data-parallax="0.14" data-reveal>
+        <span class="floating-card-num">2–3×</span>
+        <span class="floating-card-label">Increase in plasma-dissolved oxygen per HBOT session<sup>†</sup></span>
       </div>
     </div>
   </section>
 
   <!-- ============ PHILOSOPHY ============ -->
-  <section class="philosophy bleed" id="philosophy">
-    <div class="philosophy-grid">
-      <figure class="philosophy-image">
-        <img
-          src="https://image.pollinations.ai/prompt/abstract%20minimalist%20illustration%20of%20a%20human%20spine%20rendered%20in%20deep%20navy%20and%20soft%20teal%2C%20clinical%20yet%20ethereal%2C%20negative%20space%2C%20editorial%20wellness%20photography%20style?width=1200&height=1500&nologo=true"
-          alt="Abstract illustration of a human spine in navy and teal, evoking structure and calm"
-          loading="lazy" width="1200" height="1500">
-      </figure>
-      <div class="philosophy-copy container-right">
-        <span class="section-tag">Our Philosophy</span>
-        <h2>The body is architecture. We are its restorers.</h2>
-        <p>Every joint, disc, and nerve pathway is load-bearing. When alignment drifts, the whole structure compensates — tension climbs the spine, breath shortens, focus dulls. Hands On Wellness exists to correct that drift at its source, not mask it downstream.</p>
-        <p>We treat the nervous system as the body's central wiring and the vertebral column as its conduit. Chiropractic adjustment restores mechanical order; hyperbaric oxygen therapy floods the recovering tissue with the raw material it needs to rebuild. Used together, they address structure and cellular repair as one continuous system, not two separate appointments.</p>
-        <p class="philosophy-signoff">No shortcuts. No overselling. Just precise, evidence-informed care delivered with a steady hand.</p>
+  <section class="philosophy" id="philosophy">
+    <div class="container philosophy-stack">
+      <p class="kicker" data-reveal>Our Philosophy</p>
+      <h2 class="section-headline" data-reveal>The body is architecture. <span class="accent-soft">We are its restorers.</span></h2>
+      <p class="lede lede-center" data-reveal>Every joint, disc, and nerve pathway is load-bearing. When alignment drifts, the whole structure compensates — tension climbs the spine, breath shortens, focus dulls. We treat the nervous system as the body's central wiring and the vertebral column as its conduit, correcting drift at its source rather than masking it downstream.</p>
+
+      <div class="philosophy-quote-row" data-reveal>
+        <blockquote class="floating-card glass card-rotate-r" data-parallax="0.05">
+          <p>&ldquo;No shortcuts. No overselling. Just precise, evidence-informed care delivered with a steady hand.&rdquo;</p>
+        </blockquote>
       </div>
     </div>
   </section>
@@ -81,103 +89,124 @@
   <!-- ============ MODALITIES ============ -->
   <section class="modalities" id="modalities">
     <div class="container">
-      <div class="section-head">
-        <span class="section-tag">Modalities</span>
-        <h2>Four disciplines. <br>One restorative system.</h2>
-        <p class="section-lede">Each modality is delivered as its own precise intervention — sequenced, measured, and adapted to where your body is holding tension or lacking oxygen.</p>
-      </div>
+      <p class="kicker" data-reveal>Modalities</p>
+      <h2 class="section-headline" data-reveal>Four disciplines. <span class="accent-soft">One restorative system.</span></h2>
+      <p class="lede" data-reveal>Each modality is delivered as its own precise intervention — sequenced, measured, and adapted to where your body is holding tension or lacking oxygen.</p>
+    </div>
 
-      <div class="modality-grid">
+    <div class="modality-rows">
 
-        <article class="modality-block mod-1">
+      <article class="modality-row" data-reveal>
+        <div class="modality-visual" data-parallax="0.05">
+          <img class="mask-fade-edge" loading="lazy" width="1200" height="1000"
+            src="https://image.pollinations.ai/prompt/close-up%20editorial%20photograph%20of%20a%20chiropractor%27s%20hands%20performing%20a%20gentle%20spinal%20adjustment%2C%20warm%20cream%20and%20navy%20tones%2C%20soft%20studio%20light%2C%20calm%20clinical%20wellness%20photography?width=1200&height=1000&nologo=true"
+            alt="Close-up of a chiropractor's hands performing a gentle spinal adjustment">
           <span class="modality-num" aria-hidden="true">01</span>
+        </div>
+        <div class="modality-panel glass" data-parallax="0.02">
           <h3>Chiropractic Adjustment</h3>
-          <p class="modality-desc">Manual and instrument-assisted spinal manipulation to correct vertebral subluxation, restore joint mobility, and relieve nerve interference along the spinal column. Sessions are assessed individually via postural and motion analysis before any adjustment is made.</p>
+          <p>Manual and instrument-assisted spinal manipulation to correct vertebral subluxation, restore joint mobility, and relieve nerve interference along the spinal column.</p>
           <ul class="modality-points">
             <li>Vertebral alignment &amp; joint mobilization</li>
             <li>Nervous system regulation</li>
             <li>Postural correction protocols</li>
           </ul>
-        </article>
+        </div>
+      </article>
 
-        <article class="modality-block mod-2">
+      <article class="modality-row row-reverse" data-reveal>
+        <div class="modality-visual" data-parallax="0.05">
+          <img class="mask-fade-edge" loading="lazy" width="1200" height="1000"
+            src="https://image.pollinations.ai/prompt/serene%20interior%20of%20a%20modern%20hyperbaric%20oxygen%20therapy%20chamber%2C%20soft%20teal%20and%20bone-white%20glow%2C%20calm%20clinical%20wellness%20space%2C%20editorial%20architectural%20photography?width=1200&height=1000&nologo=true"
+            alt="Modern hyperbaric oxygen therapy chamber glowing with soft teal light">
           <span class="modality-num" aria-hidden="true">02</span>
+        </div>
+        <div class="modality-panel glass" data-parallax="0.02">
           <h3>Hyperbaric Oxygen Therapy</h3>
-          <p class="modality-desc">Pressurized, oxygen-rich chambers increase the amount of oxygen your blood plasma can carry — accelerating cellular oxygenation, reducing inflammation, and supporting tissue regeneration well beyond what breathing at normal atmospheric pressure can achieve.</p>
+          <p>Pressurized, oxygen-rich chambers increase the amount of oxygen your blood plasma can carry — accelerating cellular oxygenation and supporting tissue regeneration.</p>
           <ul class="modality-points">
             <li>Elevated cellular oxygenation</li>
             <li>Inflammation &amp; recovery support</li>
             <li>Monitored, single-occupancy chambers</li>
           </ul>
-        </article>
+        </div>
+      </article>
 
-        <article class="modality-block mod-3">
+      <article class="modality-row" data-reveal>
+        <div class="modality-visual" data-parallax="0.05">
+          <img class="mask-fade-edge" loading="lazy" width="1200" height="1000"
+            src="https://image.pollinations.ai/prompt/editorial%20photograph%20of%20a%20spinal%20decompression%20treatment%20table%20in%20a%20calm%20wellness%20clinic%2C%20warm%20natural%20light%2C%20navy%20and%20cream%20color%20palette?width=1200&height=1000&nologo=true"
+            alt="Spinal decompression treatment table in a calm, softly lit wellness clinic">
           <span class="modality-num" aria-hidden="true">03</span>
+        </div>
+        <div class="modality-panel glass" data-parallax="0.02">
           <h3>Spinal Decompression</h3>
-          <p class="modality-desc">Gentle, controlled traction creates negative pressure within the disc space — encouraging retraction of herniated or bulging material, improving circulation to the area, and relieving pressure on compressed nerve roots without surgery.</p>
+          <p>Gentle, controlled traction creates negative pressure within the disc space, encouraging retraction of herniated material and relieving pressure on compressed nerve roots.</p>
           <ul class="modality-points">
             <li>Non-surgical disc relief</li>
             <li>Nerve root decompression</li>
             <li>Progressive, tracked sessions</li>
           </ul>
-        </article>
+        </div>
+      </article>
 
-        <article class="modality-block mod-4">
+      <article class="modality-row row-reverse" data-reveal>
+        <div class="modality-visual" data-parallax="0.05">
+          <img class="mask-fade-edge mask-fade-bottom" loading="lazy" width="1200" height="1000"
+            src="https://image.pollinations.ai/prompt/warm%20editorial%20photograph%20of%20a%20wellness%20consultation%20room%2C%20practitioner%20reviewing%20notes%20with%20a%20patient%2C%20soft%20cream%20and%20teal%20tones%2C%20calm%20clinical%20photography?width=1200&height=1000&nologo=true"
+            alt="Practitioner reviewing a care plan with a patient in a warm, calm consultation room">
           <span class="modality-num" aria-hidden="true">04</span>
+        </div>
+        <div class="modality-panel glass" data-parallax="0.02">
           <h3>Wellness Consultation</h3>
-          <p class="modality-desc">A full intake — postural assessment, movement screening, and history review — used to build a sequenced care plan that combines adjustment, decompression, and hyperbaric sessions in the order your body actually needs them.</p>
+          <p>A full intake — postural assessment, movement screening, and history review — used to sequence adjustment, decompression, and hyperbaric sessions in the order your body needs them.</p>
           <ul class="modality-points">
             <li>Postural &amp; movement screening</li>
             <li>Individualized care sequencing</li>
             <li>Ongoing progress review</li>
           </ul>
-        </article>
+        </div>
+      </article>
 
-      </div>
     </div>
   </section>
 
   <!-- ============ PROCESS ============ -->
   <section class="process" id="process">
     <div class="container">
-      <div class="section-head">
-        <span class="section-tag">Process</span>
-        <h2>How care unfolds, session to session.</h2>
-      </div>
-
-      <ol class="timeline">
-        <li class="timeline-step step-1">
-          <span class="step-num">01</span>
-          <h3>Assessment</h3>
-          <p>Postural analysis, movement screening, and a detailed history establish the baseline. We identify where the structure has drifted before we touch it.</p>
-        </li>
-        <li class="timeline-step step-2">
-          <span class="step-num">02</span>
-          <h3>Alignment</h3>
-          <p>Manual or instrument-assisted adjustment restores joint mobility and corrects vertebral positioning, easing nerve interference at its source.</p>
-        </li>
-      </ol>
-    </div>
-
-    <div class="bleed process-band">
-      <div class="bubble-field bubble-field-light" aria-hidden="true">
-        <span class="bubble b1"></span>
-        <span class="bubble b2"></span>
-        <span class="bubble b3"></span>
-      </div>
-      <div class="container process-band-inner">
-        <span class="step-num step-num-light">03</span>
-        <h3>Oxygenation</h3>
-        <p>A pressurized hyperbaric session follows, driving oxygen deep into recovering tissue while the nervous system settles into its corrected alignment.</p>
-      </div>
+      <p class="kicker" data-reveal>Process</p>
+      <h2 class="section-headline" data-reveal>How care unfolds, <span class="accent-soft">session to session.</span></h2>
     </div>
 
     <div class="container">
-      <ol class="timeline timeline-end">
-        <li class="timeline-step step-4">
-          <span class="step-num">04</span>
-          <h3>Integration</h3>
-          <p>We review response, adjust the care plan, and space future sessions to reinforce lasting structural and neurological change — not just temporary relief.</p>
+      <ol class="timeline">
+        <li class="timeline-item" data-reveal>
+          <span class="timeline-marker">01</span>
+          <div class="timeline-card glass" data-parallax="0.03">
+            <h3>Assessment</h3>
+            <p>Postural analysis, movement screening, and a detailed history establish the baseline before we touch a single vertebra.</p>
+          </div>
+        </li>
+        <li class="timeline-item" data-reveal>
+          <span class="timeline-marker">02</span>
+          <div class="timeline-card glass" data-parallax="0.03">
+            <h3>Alignment</h3>
+            <p>Manual or instrument-assisted adjustment restores joint mobility and corrects vertebral positioning, easing nerve interference at its source.</p>
+          </div>
+        </li>
+        <li class="timeline-item" data-reveal>
+          <span class="timeline-marker">03</span>
+          <div class="timeline-card glass" data-parallax="0.03">
+            <h3>Oxygenation</h3>
+            <p>A pressurized hyperbaric session follows, driving oxygen deep into recovering tissue while the nervous system settles into its corrected alignment.</p>
+          </div>
+        </li>
+        <li class="timeline-item" data-reveal>
+          <span class="timeline-marker">04</span>
+          <div class="timeline-card glass" data-parallax="0.03">
+            <h3>Integration</h3>
+            <p>We review response and space future sessions to reinforce lasting structural and neurological change — not just temporary relief.</p>
+          </div>
         </li>
       </ol>
     </div>
@@ -185,51 +214,39 @@
 
   <!-- ============ BENEFITS / SCIENCE ============ -->
   <section class="benefits">
-    <div class="container">
-      <div class="benefits-grid">
-        <div class="benefits-copy">
-          <span class="section-tag">Benefits &amp; Science</span>
-          <h2>Two disciplines, one physiological outcome.</h2>
-          <p>Chiropractic adjustment removes mechanical interference along the spinal column, allowing the nervous system to communicate with the rest of the body without obstruction. Hyperbaric oxygen therapy raises dissolved oxygen levels in the blood plasma, reaching tissue that reduced circulation would otherwise starve.</p>
-          <p>Independently, each modality supports recovery. Together, sequenced deliberately, they compound: a structurally aligned body oxygenates more efficiently, and an oxygen-rich tissue bed heals faster from the corrective work of adjustment.</p>
-          <div class="benefits-stats">
-            <div class="stat"><span class="stat-num">2–3×</span><span class="stat-label">Increase in plasma-dissolved oxygen during a typical HBOT session<sup>†</sup></span></div>
-            <div class="stat"><span class="stat-num">100+</span><span class="stat-label">Years of combined clinical chiropractic technique behind our protocols</span></div>
-          </div>
-          <p class="citation">† General physiological range reported in hyperbaric medicine literature; individual results vary and are assessed per patient. <!-- REPLACE_WITH_REAL: cite specific published source if desired --></p>
+    <div class="container benefits-grid">
+      <div class="benefits-copy" data-reveal>
+        <p class="kicker">Benefits &amp; Science</p>
+        <h2 class="section-headline">Two disciplines, <span class="accent-soft">one physiological outcome.</span></h2>
+        <p>Chiropractic adjustment removes mechanical interference along the spinal column, allowing the nervous system to communicate with the rest of the body without obstruction. Hyperbaric oxygen therapy raises dissolved oxygen levels in the blood plasma, reaching tissue that reduced circulation would otherwise starve.</p>
+        <p>Independently, each modality supports recovery. Together, sequenced deliberately, they compound: a structurally aligned body oxygenates more efficiently, and an oxygen-rich tissue bed heals faster from the corrective work of adjustment.</p>
+        <div class="stat-row">
+          <div class="stat-pill glass" data-parallax="0.03"><span class="stat-num">2–3×</span><span class="stat-label">Plasma-dissolved oxygen per HBOT session<sup>†</sup></span></div>
+          <div class="stat-pill glass" data-parallax="0.06"><span class="stat-num">100+</span><span class="stat-label">Years of combined clinical technique behind our protocols</span></div>
         </div>
+        <p class="citation">† General physiological range reported in hyperbaric medicine literature; individual results vary and are assessed per patient. <!-- REPLACE_WITH_REAL: cite specific published source if desired --></p>
+      </div>
 
-        <div class="benefits-visual">
-          <figure class="benefits-image">
-            <img
-              src="https://image.pollinations.ai/prompt/serene%20interior%20of%20a%20modern%20hyperbaric%20oxygen%20therapy%20chamber%20room%2C%20soft%20teal%20and%20bone-white%20tones%2C%20calm%20clinical%20wellness%20space%2C%20editorial%20architectural%20photography?width=1000&height=1200&nologo=true"
-              alt="Modern hyperbaric oxygen therapy chamber room in calming teal and bone-white tones"
-              loading="lazy" width="1000" height="1200">
-          </figure>
-          <blockquote class="pull-quote">
-            <p>“Pressurized calm — the moment your body stops compensating and starts repairing.”</p>
-          </blockquote>
-        </div>
+      <div class="benefits-visual" data-reveal>
+        <img class="mask-fade-edge" data-parallax="0.05" loading="lazy" width="1000" height="1200"
+          src="https://image.pollinations.ai/prompt/glowing%20hyperbaric%20oxygen%20chamber%20interior%20at%20dusk%2C%20soft%20teal%20bioluminescent%20light%2C%20navy%20shadows%2C%20high-end%20wellness%20editorial%20photography?width=1000&height=1200&nologo=true"
+          alt="Hyperbaric oxygen chamber glowing softly with teal light">
+        <blockquote class="floating-card glass glass-dark card-rotate-l" data-parallax="0.12">
+          <p>&ldquo;Pressurized calm — the moment your body stops compensating and starts repairing.&rdquo;</p>
+        </blockquote>
       </div>
     </div>
   </section>
 
   <!-- ============ CONTACT / FOOTER ============ -->
-  <footer class="site-footer bleed" id="contact">
-    <div class="bubble-field bubble-field-light" aria-hidden="true">
-      <span class="bubble b1"></span>
-      <span class="bubble b2"></span>
-      <span class="bubble b3"></span>
-      <span class="bubble b4"></span>
-    </div>
-    <div class="container footer-inner">
-      <div class="footer-grid">
-        <div class="footer-primary">
-          <span class="section-tag section-tag-light">Contact</span>
-          <h2>Begin restoring your architecture.</h2>
-          <p>Reach out to schedule a wellness consultation or ask a question about chiropractic care and hyperbaric oxygen therapy. We respond within one business day.</p>
-          <a href="#" class="btn btn-primary btn-on-navy">Schedule a Consultation</a>
-        </div>
+  <footer class="site-footer" id="contact">
+    <div class="container">
+      <div class="contact-card glass glass-dark" data-reveal>
+        <p class="kicker kicker-light">Contact</p>
+        <h2 class="section-headline on-dark">Begin restoring <span class="accent-soft accent-soft-light">your architecture.</span></h2>
+        <p class="lede on-dark-soft">Reach out to schedule a wellness consultation or ask a question about chiropractic care and hyperbaric oxygen therapy. We respond within one business day.</p>
+        <a href="#" class="btn btn-primary">Schedule a Consultation</a>
+
         <div class="footer-details">
           <div class="footer-block">
             <h4>Visit</h4>
@@ -248,6 +265,7 @@
           </div>
         </div>
       </div>
+
       <div class="footer-bottom">
         <span class="wordmark wordmark-light">Hands&nbsp;On<span>Wellness</span></span>
         <p>&copy; <span id="year"></span> Hands On Wellness Chiropractic and Hyperbaric Oxygen Therapy. All rights reserved.</p>
