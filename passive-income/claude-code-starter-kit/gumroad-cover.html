@@ -1,0 +1,224 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1600px;
+    height: 900px;
+    background: #0b0f14;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+  .stage {
+    position: relative;
+    width: 1600px;
+    height: 900px;
+    background:
+      radial-gradient(circle at 82% 12%, rgba(52,211,153,0.16), transparent 42%),
+      radial-gradient(circle at 10% 90%, rgba(52,211,153,0.08), transparent 40%),
+      linear-gradient(180deg, #0b0f14 0%, #0a0d12 100%);
+  }
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(180deg, rgba(0,0,0,0.9), rgba(0,0,0,0.15) 70%);
+  }
+  .content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 78px 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #34d399, #059669);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    color: #06231a;
+    font-size: 20px;
+  }
+  .brand-name {
+    font-family: "Courier New", monospace;
+    letter-spacing: 0.14em;
+    color: #9ca3af;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .badge {
+    margin-left: auto;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    color: #34d399;
+    border: 1px solid rgba(52,211,153,0.35);
+    background: rgba(52,211,153,0.08);
+    padding: 8px 16px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .main {
+    display: flex;
+    align-items: center;
+    gap: 70px;
+  }
+  .copy { flex: 1.15; }
+  .eyebrow {
+    font-family: "Courier New", monospace;
+    color: #34d399;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    margin-bottom: 22px;
+  }
+  h1 {
+    font-size: 76px;
+    line-height: 1.04;
+    color: #f3f4f6;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 26px;
+  }
+  h1 span { color: #34d399; }
+  .subhead {
+    font-size: 26px;
+    color: #9ca3af;
+    line-height: 1.5;
+    max-width: 640px;
+    margin-bottom: 40px;
+  }
+  .pills {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    font-family: "Courier New", monospace;
+    font-size: 18px;
+    color: #d1d5db;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    padding: 12px 20px;
+    border-radius: 10px;
+  }
+  .pill b { color: #34d399; }
+
+  .term {
+    flex: 1;
+    background: #0d1420;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+    overflow: hidden;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 18px;
+    background: #10182a;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .term-body {
+    padding: 30px 32px 34px;
+    font-family: "Courier New", monospace;
+    font-size: 19px;
+    line-height: 2.15;
+    color: #cbd5e1;
+  }
+  .term-body .prompt { color: #34d399; }
+  .term-body .path { color: #60a5fa; }
+  .term-body .comment { color: #6b7280; }
+  .term-body .ok { color: #34d399; }
+
+  .footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .price {
+    font-family: "Courier New", monospace;
+    font-size: 30px;
+    color: #f3f4f6;
+    font-weight: 700;
+  }
+  .price span { color: #6b7280; font-size: 18px; font-weight: 400; margin-left: 10px; }
+  .fineprint {
+    font-size: 15px;
+    color: #4b5563;
+    max-width: 560px;
+    text-align: right;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="grid"></div>
+    <div class="content">
+      <div class="brand">
+        <div class="brand-mark">&gt;_</div>
+        <div class="brand-name">Agent&nbsp;Ops</div>
+        <div class="badge">FOR CLAUDE CODE</div>
+      </div>
+
+      <div class="main">
+        <div class="copy">
+          <div class="eyebrow">SKILLS · SUBAGENTS · HOOKS</div>
+          <h1>Give your coding<br>agent a <span>real</span><br>ops setup.</h1>
+          <div class="subhead">
+            6 workflow skills, 3 subagents, and 3 safety hooks &mdash;
+            plain config files you drop into <b>.claude/</b> and use immediately.
+            No plugin, no account, no subscription.
+          </div>
+          <div class="pills">
+            <div class="pill"><b>6</b> Skills</div>
+            <div class="pill"><b>3</b> Subagents</div>
+            <div class="pill"><b>3</b> Hooks</div>
+            <div class="pill"><b>1</b> Starter settings.json</div>
+          </div>
+        </div>
+
+        <div class="term">
+          <div class="term-bar">
+            <div class="dot" style="background:#ff5f56"></div>
+            <div class="dot" style="background:#ffbd2e"></div>
+            <div class="dot" style="background:#27c93f"></div>
+          </div>
+          <div class="term-body">
+            <div><span class="prompt">$</span> cp -r agent-ops-kit/* <span class="path">.claude/</span></div>
+            <div><span class="comment"># dependency-upgrade-planner, test-gap-finder,</span></div>
+            <div><span class="comment"># license-compliance-scan, doc-sync, release-manager...</span></div>
+            <div>&nbsp;</div>
+            <div><span class="prompt">$</span> claude</div>
+            <div><span class="ok">&gt; 12 configs loaded.</span> Ready.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="price">$25 <span>one-time &middot; own it forever</span></div>
+        <div class="fineprint">Unofficial add-on pack for Claude Code. Not affiliated with or endorsed by Anthropic.</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
