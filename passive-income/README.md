@@ -1,5 +1,7 @@
 # Passive Income Project: Agent Ops Starter Kit
 
+**Live:** https://kairoslight.gumroad.com/l/agent-ops-kit
+
 A digital product, not a service — a one-time-built pack sold as a download, with no ongoing
 delivery, outreach, or ad spend required to keep it "running." This is deliberately different
 from `framewrk/` (the sibling business in this repo), which depends on continuous founder-led
@@ -18,12 +20,14 @@ and hooks, plus the Gumroad listing copy and license terms needed to sell it.
 - After that, it's genuinely passive: no inventory, no support obligation beyond what the
   license promises, no server to run.
 
-## Launch steps (manual, can't be automated from here)
+## Launch steps
 
-1. Read every file in `claude-code-starter-kit/` once more yourself before publishing.
-2. Create a Gumroad account/product listing, paste in `SALES_PAGE.md`'s copy, set the price.
-3. Run `claude-code-starter-kit/package.sh` to build the zip and upload it as the product file.
-4. Publish, then do the one seed post from the pre-launch checklist.
+1. ~~Read every file in `claude-code-starter-kit/` once more yourself before publishing.~~
+2. ~~Create a Gumroad account/product listing, paste in `SALES_PAGE.md`'s copy, set the price.~~
+3. ~~Run `claude-code-starter-kit/package.sh` to build the zip and upload it as the product file.~~
+4. ~~Publish~~ — **done, live as of 2026-07-14.**
+5. Do the one seed post from the pre-launch checklist (still open — this is the last manual
+   step before discovery is fully passive).
 
 ## Honest expectations
 
