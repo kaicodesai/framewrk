@@ -1,8 +1,9 @@
 # Gumroad listing copy (copy/paste starting point)
 
 Everything below is a draft — edit the price and tone to match your own voice before publishing.
-Suggested price: **$19** one-time (a $39 "team" tier granting the same files under an
-internal-multi-seat license is a reasonable upsell if you want two price points).
+Suggested price: **$25** one-time. Keep it a single price point at launch — a $39 "team" tier
+granting the same files under an internal-multi-seat license is a reasonable upsell to add
+later once you have real conversion data, not something to guess at up front.
 
 ---
 
