@@ -269,6 +269,10 @@ p { max-width: 62ch; color: var(--text-soft); }
   position: absolute; inset: 0 0 0 var(--gutter);
   width: calc(100vw - var(--gutter));
 }
+/* .tilt has no explicit height of its own (it sizes to content everywhere
+   else it's used, e.g. glass text cards), so height:100% on the svg below
+   has nothing definite to resolve against unless we set it here explicitly. */
+.hero-collage-main .tilt { height: 100%; }
 .hero-collage-main .illustration { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
 .hero-collage-accent {
   position: absolute;
