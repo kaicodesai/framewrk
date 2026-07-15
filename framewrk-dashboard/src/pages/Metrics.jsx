@@ -3,7 +3,15 @@ import PageHeader from '../components/PageHeader'
 import Panel from '../components/Panel'
 import StatTile from '../components/StatTile'
 import { api } from '../lib/api'
-import { computeFunnel, computeWinLoss, computeRevenue, computeLossReasons, formatCents } from '../lib/metrics'
+import {
+  computeFunnel,
+  computeWinLoss,
+  computeRevenue,
+  computeLossReasons,
+  computePipelineValue,
+  computePacing,
+  formatCents,
+} from '../lib/metrics'
 
 // Validated ordinal ramp (one hue, monotone lightness, light end clears the
 // paper surface at 2.35:1) — see dataviz skill validate_palette.js --ordinal.
@@ -92,9 +100,12 @@ export default function Metrics() {
 
   const funnel = computeFunnel(prospects)
   const { won, lost, winRate } = computeWinLoss(prospects)
-  const { totalCents, avgCents } = computeRevenue(prospects)
+  const revenue = computeRevenue(prospects)
+  const { totalCents, avgCents } = revenue
   const lossReasons = computeLossReasons(prospects)
   const avgBuildHours = buildMetrics?.avg_build_hours
+  const pipeline = computePipelineValue(prospects)
+  const pacing = computePacing(prospects, revenue)
 
   return (
     <div>
@@ -115,6 +126,48 @@ export default function Metrics() {
           }
         />
       </div>
+
+      <Panel className="p-6 mb-10">
+        <div className="flex items-center justify-between mb-5">
+          <div className="label-caps">Pacing to $1,000,000/year</div>
+          <span
+            className={`font-mono text-xs px-2 py-1 border ${
+              pacing.onPace ? 'border-acid-text text-acid-text' : 'border-danger text-danger'
+            }`}
+          >
+            {pacing.onPace ? 'ON PACE' : 'BEHIND PACE'}
+          </span>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
+            <div className="label-caps mb-1">Weighted pipeline</div>
+            <div className="font-display text-2xl text-ink">{formatCents(pipeline.weighted) || '$0.00'}</div>
+            <div className="font-mono text-xs text-faint">{formatCents(pipeline.raw) || '$0.00'} raw</div>
+          </div>
+          <div>
+            <div className="label-caps mb-1">Last 30 days</div>
+            <div className="font-display text-2xl text-ink">{formatCents(pacing.last30Cents) || '$0.00'}</div>
+          </div>
+          <div>
+            <div className="label-caps mb-1">Run-rate pace</div>
+            <div className="font-display text-2xl text-ink">
+              {formatCents(pacing.annualRunRateCents) || '$0.00'}
+            </div>
+            <div className="font-mono text-xs text-faint">annualized / yr</div>
+          </div>
+          <div>
+            <div className="label-caps mb-1">Monthly gap</div>
+            <div className="font-display text-2xl text-ink">
+              {pacing.monthlyGapCents > 0 ? formatCents(pacing.monthlyGapCents) : '$0.00'}
+            </div>
+            {pacing.monthlyGapCents > 0 && pacing.extraDealsPerMonth !== null && (
+              <div className="font-mono text-xs text-faint">
+                ~{pacing.extraDealsPerMonth} more deal{pacing.extraDealsPerMonth === 1 ? '' : 's'}/mo
+              </div>
+            )}
+          </div>
+        </div>
+      </Panel>
 
       <Panel className="p-6 mb-10">
         <div className="label-caps mb-5">Conversion funnel</div>

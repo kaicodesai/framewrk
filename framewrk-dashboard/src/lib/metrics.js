@@ -1,3 +1,5 @@
+import { PRICING_CENTS } from './pricing'
+
 // Pure computation over an already-fetched prospects list — no extra API
 // calls. The funnel is cumulative ("reached at least this stage"), computed
 // from each non-lost prospect's *current* status rank. This is only valid
@@ -50,6 +52,71 @@ export function computeRevenue(prospects) {
   return {
     totalCents,
     avgCents: wonWithValue.length > 0 ? Math.round(totalCents / wonWithValue.length) : null,
+  }
+}
+
+// Heuristic close-probability by stage — a standard sales-ops default, not
+// derived from your actual history (we can't reliably compute that yet: lost
+// prospects don't record how far they got before falling out, so a true
+// empirical stage-conditional win rate isn't available). Revisit these once
+// there's enough won/lost volume at each stage to replace the guess.
+const ACTIVE_STAGE_PROBABILITY = {
+  building: 0.1,
+  qa_pass: 0.15,
+  qa_fail: 0.1,
+  outreach_ready: 0.2,
+  sent: 0.3,
+  interested: 0.55,
+}
+
+// Only prospects with a build started carry a deal_value_cents (fixed
+// pricing is stamped at build time) — so "priced but not yet won/lost" is
+// exactly the open pipeline.
+export function computePipelineValue(prospects) {
+  const active = prospects.filter(
+    (p) => p.status in ACTIVE_STAGE_PROBABILITY && p.deal_value_cents != null
+  )
+  const raw = active.reduce((sum, p) => sum + p.deal_value_cents, 0)
+  const weighted = active.reduce(
+    (sum, p) => sum + p.deal_value_cents * (ACTIVE_STAGE_PROBABILITY[p.status] ?? 0),
+    0
+  )
+  return { raw, weighted: Math.round(weighted) }
+}
+
+export const ANNUAL_GOAL_CENTS = 100_000_000 // $1,000,000/year
+const BLENDED_DEFAULT_DEAL_CENTS = Math.round(
+  (PRICING_CENTS.website + PRICING_CENTS.website_dashboard) / 2
+)
+const MS_PER_DAY = 24 * 60 * 60 * 1000
+
+// Trailing-30-day run rate, annualized — avoids calendar-year-boundary
+// edge cases (works from day one, regardless of when in the year it's run).
+export function computePacing(prospects, revenueTotals) {
+  const now = Date.now()
+  const last30Cents = prospects
+    .filter(
+      (p) =>
+        (p.status === 'paid' || p.status === 'handed_off') &&
+        p.deal_value_cents != null &&
+        now - new Date(p.updated_at).getTime() <= 30 * MS_PER_DAY
+    )
+    .reduce((sum, p) => sum + p.deal_value_cents, 0)
+
+  const annualRunRateCents = Math.round((last30Cents / 30) * 365)
+  const monthlyGoalCents = Math.round(ANNUAL_GOAL_CENTS / 12)
+  const monthlyGapCents = Math.max(0, monthlyGoalCents - last30Cents)
+  const avgDealCents = revenueTotals?.avgCents ?? BLENDED_DEFAULT_DEAL_CENTS
+  const extraDealsPerMonth = avgDealCents > 0 ? Math.ceil(monthlyGapCents / avgDealCents) : null
+
+  return {
+    last30Cents,
+    annualRunRateCents,
+    monthlyGoalCents,
+    monthlyGapCents,
+    avgDealCents,
+    extraDealsPerMonth,
+    onPace: annualRunRateCents >= ANNUAL_GOAL_CENTS,
   }
 }
 
