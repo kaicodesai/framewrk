@@ -76,6 +76,80 @@ export async function createProspect(request: Request, env: Env): Promise<Respon
   return json(prospect, 201);
 }
 
+const MAX_BULK_ROWS = 500;
+
+export async function bulkCreateProspects(request: Request, env: Env): Promise<Response> {
+  const body = (await request.json().catch(() => null)) as
+    | {
+        prospects?: {
+          business_name?: string;
+          category?: string;
+          address?: string;
+          phone?: string;
+          notes?: string;
+        }[];
+      }
+    | null;
+
+  if (!Array.isArray(body?.prospects) || body.prospects.length === 0) {
+    return badRequest("prospects must be a non-empty array");
+  }
+  if (body.prospects.length > MAX_BULK_ROWS) {
+    return badRequest(`prospects cannot exceed ${MAX_BULK_ROWS} rows per import`);
+  }
+
+  const valid = body.prospects.filter((p) => typeof p.business_name === "string" && p.business_name.trim());
+  const skippedInvalid = body.prospects.length - valid.length;
+
+  const { results: existing } = await env.DB.prepare(
+    "SELECT business_name FROM prospects WHERE business_name IS NOT NULL"
+  ).all<{ business_name: string }>();
+  const existingNames = new Set(existing.map((p) => p.business_name.trim().toLowerCase()));
+
+  const seenInBatch = new Set<string>();
+  const toInsert: NonNullable<typeof body.prospects> = [];
+  let skippedDuplicates = 0;
+
+  for (const p of valid) {
+    const key = p.business_name!.trim().toLowerCase();
+    if (existingNames.has(key) || seenInBatch.has(key)) {
+      skippedDuplicates++;
+      continue;
+    }
+    seenInBatch.add(key);
+    toInsert.push(p);
+  }
+
+  const timestamp = nowIso();
+  const statements = toInsert.map((p) =>
+    env.DB.prepare(
+      `INSERT INTO prospects
+        (id, google_maps_url, business_name, category, address, phone,
+         google_photos_json, instagram_url, notes, status, created_at, updated_at)
+       VALUES (?, '', ?, ?, ?, ?, '[]', NULL, ?, 'submitted', ?, ?)`
+    ).bind(
+      newId(),
+      p.business_name!.trim(),
+      p.category ?? null,
+      p.address ?? null,
+      p.phone ?? null,
+      p.notes ?? null,
+      timestamp,
+      timestamp
+    )
+  );
+
+  if (statements.length > 0) {
+    await env.DB.batch(statements);
+  }
+
+  return json({
+    created: toInsert.length,
+    skipped_duplicates: skippedDuplicates,
+    skipped_invalid: skippedInvalid,
+  });
+}
+
 export async function listProspects(env: Env): Promise<Response> {
   const { results } = await env.DB.prepare(
     "SELECT * FROM prospects ORDER BY created_at DESC"

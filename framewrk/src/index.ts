@@ -6,6 +6,7 @@ import { json, notFound, unauthorized } from "./lib/http";
 import { preflightResponse, withCors } from "./lib/cors";
 import {
   createProspect,
+  bulkCreateProspects,
   listProspects,
   getProspect,
   updateProspect,
@@ -36,6 +37,11 @@ async function route(request: Request, env: Env): Promise<Response> {
   }
   if (pathname === "/prospects" && method === "GET") {
     return listProspects(env);
+  }
+  // Must be checked before the generic /prospects/:id match below, since
+  // "bulk" would otherwise be captured as an id.
+  if (pathname === "/prospects/bulk" && method === "POST") {
+    return bulkCreateProspects(request, env);
   }
 
   const prospectMatch = pathname.match(/^\/prospects\/([^/]+)$/);

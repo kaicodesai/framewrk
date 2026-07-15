@@ -77,6 +77,11 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(fields),
     }),
+  bulkCreateProspects: (prospects) =>
+    request('/prospects/bulk', {
+      method: 'POST',
+      body: JSON.stringify({ prospects }),
+    }),
 }
 
 export async function checkConnection() {

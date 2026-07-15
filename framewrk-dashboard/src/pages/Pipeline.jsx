@@ -7,6 +7,7 @@ import StatTile from '../components/StatTile'
 import StatusBadge from '../components/StatusBadge'
 import { api } from '../lib/api'
 import { statusInfo } from '../lib/status'
+import { parseProspectsCsv } from '../lib/csv'
 
 const PROSPECT_STATUSES = [
   'submitted',
@@ -42,12 +43,92 @@ function sortProspects(prospects, sortBy) {
   return sorted
 }
 
+function BulkImportPanel({ onImported }) {
+  const [csvText, setCsvText] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
+  const [result, setResult] = useState(null)
+
+  const rows = parseProspectsCsv(csvText)
+  const validRows = rows.filter((r) => r.business_name)
+  const missingNameCount = rows.length - validRows.length
+
+  function handleFile(e) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setCsvText(String(reader.result ?? ''))
+    reader.readAsText(file)
+  }
+
+  async function handleImport() {
+    if (validRows.length === 0) return
+    setSubmitting(true)
+    setError(null)
+    setResult(null)
+    try {
+      const summary = await api.bulkCreateProspects(validRows)
+      setResult(summary)
+      setCsvText('')
+      await onImported()
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="text-xs text-muted font-mono">
+        Paste CSV or upload a file. Columns: business_name (required), category, address, phone,
+        notes — header row optional; if omitted, that's the assumed column order.
+      </div>
+      <input
+        type="file"
+        accept=".csv,text/csv"
+        onChange={handleFile}
+        className="font-mono text-xs text-muted"
+      />
+      <textarea
+        rows={6}
+        value={csvText}
+        onChange={(e) => {
+          setCsvText(e.target.value)
+          setResult(null)
+        }}
+        placeholder={'business_name,category,address,phone,notes\nAce Plumbing,plumber,123 Main St,555-0100,referral'}
+        className="w-full bg-surface border border-line px-3 py-2 font-mono text-xs text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+      />
+      <div className="flex items-center justify-between">
+        <span className="font-mono text-xs text-muted">
+          {rows.length === 0
+            ? 'no rows yet'
+            : `${validRows.length} row${validRows.length === 1 ? '' : 's'} ready` +
+              (missingNameCount > 0 ? ` · ${missingNameCount} skipped (missing business_name)` : '')}
+        </span>
+        <Button type="button" disabled={submitting || validRows.length === 0} onClick={handleImport}>
+          {submitting ? 'Importing…' : `Import ${validRows.length || ''}`.trim()}
+        </Button>
+      </div>
+      {error && <div className="text-xs text-danger font-mono">{error}</div>}
+      {result && (
+        <div className="text-xs text-acid-text font-mono">
+          Created {result.created} · skipped {result.skipped_duplicates} duplicate
+          {result.skipped_duplicates === 1 ? '' : 's'}
+          {result.skipped_invalid > 0 ? ` · skipped ${result.skipped_invalid} invalid` : ''}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Pipeline() {
   const [prospects, setProspects] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [mode, setMode] = useState('maps') // 'maps' | 'manual'
+  const [mode, setMode] = useState('maps') // 'maps' | 'manual' | 'bulk'
   const [mapsUrl, setMapsUrl] = useState('')
   const [businessName, setBusinessName] = useState('')
   const [notes, setNotes] = useState('')
@@ -151,42 +232,53 @@ export default function Pipeline() {
             >
               Manual entry
             </Button>
-          </div>
-        </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          {mode === 'maps' ? (
-            <input
-              type="url"
-              required
-              value={mapsUrl}
-              onChange={(e) => setMapsUrl(e.target.value)}
-              placeholder="paste Google Maps / Business Profile link"
-              className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
-            />
-          ) : (
-            <input
-              type="text"
-              required
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
-              placeholder="business name — e.g. a referral not found on Google Maps"
-              className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
-            />
-          )}
-          <input
-            type="text"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="notes (optional) — category, address, phone, no website, etc."
-            className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
-          />
-          <div className="flex items-center justify-between">
-            {formError && <span className="text-xs text-danger font-mono">{formError}</span>}
-            <Button type="submit" disabled={submitting} className="ml-auto">
-              {submitting ? 'Submitting…' : 'Submit'}
+            <Button
+              type="button"
+              variant={mode === 'bulk' ? 'primary' : 'ghost'}
+              onClick={() => setMode('bulk')}
+            >
+              Bulk import
             </Button>
           </div>
-        </form>
+        </div>
+        {mode === 'bulk' ? (
+          <BulkImportPanel onImported={load} />
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+            {mode === 'maps' ? (
+              <input
+                type="url"
+                required
+                value={mapsUrl}
+                onChange={(e) => setMapsUrl(e.target.value)}
+                placeholder="paste Google Maps / Business Profile link"
+                className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+              />
+            ) : (
+              <input
+                type="text"
+                required
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                placeholder="business name — e.g. a referral not found on Google Maps"
+                className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+              />
+            )}
+            <input
+              type="text"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="notes (optional) — category, address, phone, no website, etc."
+              className="bg-surface border border-line px-3 py-2.5 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+            />
+            <div className="flex items-center justify-between">
+              {formError && <span className="text-xs text-danger font-mono">{formError}</span>}
+              <Button type="submit" disabled={submitting} className="ml-auto">
+                {submitting ? 'Submitting…' : 'Submit'}
+              </Button>
+            </div>
+          </form>
+        )}
       </Panel>
 
       <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
