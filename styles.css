@@ -21,6 +21,16 @@
   --dark-card: #1F2E29;
   --dark-card-text: #F8F4EF;
 
+  /* dark-section rhythm: real light/dark alternation down the page,
+     not one flat continuous tone — cooler + deeper than --dark-card so
+     these read as genuine "pressurized" moments, not just a shaded card */
+  --dark-mid: #16241F;
+  --dark-deep: #0E1F1A;
+
+  /* secondary "energy" accent — vivid, reserved for glows/highlights/thin
+     accent lines on dark sections only (fails contrast as text on light bg) */
+  --vivid: #5EF5D0;
+
   --font-head: "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-serif: "Erode", Georgia, "Times New Roman", serif;
   --font-body: "Satoshi", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -56,8 +66,25 @@ body {
   font-size: 1rem;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 30%, var(--bg-1) 55%, var(--bg-2) 75%, var(--bg-3) 100%);
+  background: var(--bg-1);
 }
+
+/* Each section carries its own gradient rather than one flat body-level
+   wash. Every section's top color matches the previous section's bottom
+   color, so the chain reads as one continuous flow down the page with no
+   hard cuts — but now with real light/dark rhythm instead of one flat
+   tone throughout: two deliberate dark "pressurized" dips (HBOT +
+   Integrated Repair Path, then Book + Footer) bracketed by light sections. */
+.hero { background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%); }
+.philosophy { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-2) 100%); }
+#chiropractic { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-3) 100%); }
+#hbot { background: linear-gradient(180deg, var(--bg-3) 0%, var(--dark-mid) 100%); }
+.repair-path { background: linear-gradient(180deg, var(--dark-mid) 0%, var(--dark-mid) 100%); }
+.clinic { background: linear-gradient(180deg, var(--dark-mid) 0%, var(--bg-2) 100%); }
+.visit { background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 100%); }
+.stories { background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-3) 100%); }
+.book { background: linear-gradient(180deg, var(--bg-3) 0%, var(--dark-mid) 100%); }
+.site-footer { background: linear-gradient(180deg, var(--dark-mid) 0%, var(--dark-deep) 100%); }
 
 h1, h2, h3, h4 {
   font-family: var(--font-head);
@@ -93,22 +120,6 @@ p { max-width: 62ch; color: var(--text-soft); }
 }
 .skip-link:focus { left: 1rem; top: 1rem; }
 
-/* ===========================================================
-   Background canvas
-   =========================================================== */
-.bg-canvas { position: absolute; inset: 0; height: 100%; overflow: hidden; pointer-events: none; z-index: 0; }
-.glow {
-  position: absolute;
-  width: 40vw; height: 40vw; max-width: 620px; max-height: 620px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
-  filter: blur(90px);
-  opacity: 0.3;
-}
-.glow-sm { width: 24vw; height: 24vw; max-width: 360px; max-height: 360px; opacity: 0.26; }
-.glow-lg { width: 52vw; height: 52vw; max-width: 760px; max-height: 760px; opacity: 0.24; }
-@media (max-width: 640px) { .glow { display: none; } }
-
 /* ---------- Layout ---------- */
 .container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 1; }
 .bleed { width: 100vw; position: relative; left: 50%; margin-left: -50vw; }
@@ -129,6 +140,26 @@ p { max-width: 62ch; color: var(--text-soft); }
 .on-dark-em { color: var(--accent-light); }
 .on-dark-soft { color: rgba(248, 244, 239, 0.82); }
 
+/* Applied to whole sections that now sit on a dark background (HBOT,
+   Integrated Repair Path, Footer) so every descendant text element flips
+   to light-on-dark automatically, without touching each element's markup. */
+.section-dark { color: var(--dark-card-text); }
+.section-dark .kicker { color: var(--accent-light); }
+.section-dark .section-headline,
+.section-dark h2, .section-dark h3 { color: var(--dark-card-text); }
+.section-dark em, .section-dark .accent-serif { color: var(--accent-light); }
+.section-dark .lede, .section-dark p { color: rgba(248, 244, 239, 0.82); }
+.section-dark .offering-points li { color: rgba(248, 244, 239, 0.82); }
+.section-dark .offering-points strong { color: var(--dark-card-text); }
+.section-dark .offering-points li::before { background: var(--vivid); }
+.section-dark h4 { color: var(--vivid); }
+.section-dark .footer-block p { color: rgba(248, 244, 239, 0.85); }
+.section-dark .footer-block a:hover { color: var(--vivid); }
+.section-dark .footer-bottom { border-top-color: rgba(248, 244, 239, 0.12); }
+.section-dark .footer-bottom p { color: rgba(248, 244, 239, 0.55); }
+.section-dark .wordmark { color: var(--dark-card-text); }
+.section-dark .wordmark span { color: var(--vivid); }
+
 /* ---------- Buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
@@ -137,8 +168,21 @@ p { max-width: 62ch; color: var(--text-soft); }
   max-width: 100%;
   transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
 }
-.btn-primary { background: var(--accent); color: var(--btn-ink); box-shadow: 0 18px 34px -16px rgba(44, 140, 124, 0.55); }
+.btn-primary { position: relative; overflow: hidden; background: var(--accent); color: var(--btn-ink); box-shadow: 0 18px 34px -16px rgba(44, 140, 124, 0.55); }
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 24px 42px -16px rgba(44, 140, 124, 0.6); }
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0; left: -60%;
+  width: 35%; height: 100%;
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: skewX(-20deg);
+  animation: btn-shimmer 5s ease-in-out infinite;
+}
+@keyframes btn-shimmer {
+  0% { left: -60%; }
+  30%, 100% { left: 140%; }
+}
 .btn-ghost { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); color: var(--text); border: 1px solid rgba(36, 29, 25, 0.12); }
 .btn-ghost:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.65); }
 .btn-header { padding: 0.65rem 1.4rem; font-size: 0.85rem; }
@@ -204,10 +248,27 @@ p { max-width: 62ch; color: var(--text-soft); }
   transform: translateY(var(--scroll-shift)) scale(var(--scroll-scale));
 }
 
+/* Gentle scale-only "breathing" pulse on the mesh-gradient glow circles inside
+   each illustration — never touches opacity, so the hand-tuned layering of
+   each composition (baked into each circle's own opacity attribute) stays intact. */
+.illustration circle[fill^="url(#glow"] {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mesh-breathe 6s ease-in-out infinite;
+}
+.illustration circle[fill^="url(#glow"]:nth-of-type(2n) { animation-duration: 8s; animation-delay: -2s; }
+.illustration circle[fill^="url(#glow"]:nth-of-type(3n) { animation-duration: 5s; animation-delay: -3.5s; }
+@keyframes mesh-breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .float-wrap { animation: none; transform: none !important; }
   .depth-wrap { transform: none !important; }
   .tilt { transition: none; transform: none !important; }
+  .btn-primary::after { animation: none; }
+  .illustration circle[fill^="url(#glow"] { animation: none; }
   html { scroll-behavior: auto; }
 }
 
@@ -396,7 +457,7 @@ p { max-width: 62ch; color: var(--text-soft); }
 .book { position: relative; padding: clamp(6rem, 11vw, 9rem) 0; z-index: 1; overflow: hidden; }
 .book-bg { position: absolute; inset: 0; z-index: 0; }
 .book-bg .illustration { width: 100%; height: 100%; object-fit: cover; }
-.book-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(31,46,41,0.35), rgba(31,46,41,0.72)); }
+.book-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(22,36,31,0.3), rgba(22,36,31,0.94)); }
 .book-inner { position: relative; z-index: 1; display: flex; justify-content: center; }
 .book-panel { max-width: 34rem; }
 .book-panel .tilt { padding: clamp(2.25rem, 4vw, 3rem); text-align: center; }
