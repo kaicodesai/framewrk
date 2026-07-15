@@ -6,6 +6,7 @@ const NAV = [
   { to: '/', label: 'Pipeline', end: true },
   { to: '/outreach', label: 'Outreach', badgeKey: 'needsOutreach' },
   { to: '/handovers', label: 'Handovers' },
+  { to: '/metrics', label: 'Metrics' },
   { to: '/settings', label: 'Settings' },
 ]
 

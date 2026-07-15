@@ -4,6 +4,7 @@ import Pipeline from './pages/Pipeline'
 import ProspectDetail from './pages/ProspectDetail'
 import Outreach from './pages/Outreach'
 import Handovers from './pages/Handovers'
+import Metrics from './pages/Metrics'
 import Settings from './pages/Settings'
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
         <Route path="prospects/:id" element={<ProspectDetail />} />
         <Route path="outreach" element={<Outreach />} />
         <Route path="handovers" element={<Handovers />} />
+        <Route path="metrics" element={<Metrics />} />
         <Route path="settings" element={<Settings />} />
       </Route>
     </Routes>

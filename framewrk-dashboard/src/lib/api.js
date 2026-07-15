@@ -82,6 +82,7 @@ export const api = {
       method: 'POST',
       body: JSON.stringify({ prospects }),
     }),
+  getMetrics: () => request('/metrics'),
 }
 
 export async function checkConnection() {

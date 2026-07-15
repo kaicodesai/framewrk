@@ -15,6 +15,7 @@ import {
 } from "./routes/prospects";
 import { getBuild, getBuildJobs, submitPreview } from "./routes/builds";
 import { createActivity, listActivities } from "./routes/activities";
+import { getMetrics } from "./routes/metrics";
 import { runStage } from "./pipeline/stages";
 
 async function route(request: Request, env: Env): Promise<Response> {
@@ -83,6 +84,10 @@ async function route(request: Request, env: Env): Promise<Response> {
   const submitPreviewMatch = pathname.match(/^\/builds\/([^/]+)\/submit-preview$/);
   if (submitPreviewMatch && method === "POST") {
     return submitPreview(request, env, submitPreviewMatch[1]);
+  }
+
+  if (pathname === "/metrics" && method === "GET") {
+    return getMetrics(env);
   }
 
   return notFound();
