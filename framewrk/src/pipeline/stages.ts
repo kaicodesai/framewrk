@@ -1,6 +1,7 @@
 import type { Build, BuildJobMessage, Env, Prospect } from "../types";
 import { completeChat } from "../lib/openrouter";
 import { startJob, finishJob } from "../lib/jobs";
+import { CORE_CHASSIS, NON_NEGOTIABLE_CONSTRAINTS } from "./chassis";
 
 function nowIso(): string {
   return new Date().toISOString();
@@ -37,23 +38,34 @@ async function enqueue(env: Env, message: BuildJobMessage): Promise<void> {
 }
 
 // --- Stage: brand-design ---------------------------------------------------
+// Produces the "personalization layer" that sits on top of the frozen
+// CORE_CHASSIS (see chassis.ts) -- this is the one place per-business
+// customization actually happens, so every field here must be specific to
+// this business's niche, never a generic reused value.
 async function runBrandDesign(env: Env, message: BuildJobMessage): Promise<void> {
   await setBuildStatus(env, message.buildId, "designing");
   const prospect = await getProspect(env, message.prospectId);
 
   const raw = await completeChat(env, {
     system:
-      "You are a senior brand and graphic designer known for bold, avant-garde, agency-quality work — " +
-      "Awwwards Site-of-the-Day caliber, never a generic template or reskinned SaaS dark-mode layout. " +
-      "Given a local business, produce a design brief as strict JSON with keys: " +
-      '"palette" (array of 3-5 hex colors), "typography" (object with "heading" and "body" font names), ' +
-      '"tone" (array of 3-5 adjectives), "layout_direction" (3-4 sentences that MUST name one specific, ' +
-      "concrete structural device unique to this build — e.g. a diagonal section divider, a scroll-linked " +
-      "split-screen, an interrupted grid with irregular column spans, a marquee/ticker strip, an oversized " +
-      "rotated element — chosen to fit this business's niche and mood, not a reused 'asymmetric grid + big " +
-      "type' recipe. The layout_direction must also state that any decorative overlapping element is only " +
-      "ever placed over genuinely empty space and must never cover or reduce legibility of body text). " +
-      "Output ONLY the JSON object, no markdown fencing, no commentary.",
+      "You are a senior brand strategist filling in a personalization layer for a website template " +
+      "system. Given a local business, produce STRICT JSON with exactly these keys: " +
+      '"industry_vibe" (short phrase naming the niche and desired feeling, e.g. "boutique med spa — ' +
+      'clinical calm meets quiet luxury"), "color_direction" (object with "base_tone": one of "dark ' +
+      'moody"/"light airy"/"warm"/"cool", "background_gradient": array of 2-3 hex colors for the ' +
+      'continuous background wash, "accent_color": one hex used exclusively for the primary CTA and key ' +
+      'highlights), "imagery_style" (one of "photography"/"3D renders"/"illustration"/"product ' +
+      'screenshots", chosen for this niche), "hero_bleed" (boolean — should the hero visual bleed off ' +
+      'the viewport edge), "typography_personality" (one of "modern sans"/"editorial serif"/"bold ' +
+      'tech"/"soft humanist", chosen for this niche), "tone_of_copy" (one of "premium & minimal"/"warm & ' +
+      'approachable"/"bold & confident", chosen for this niche), "cta_goal" (the single primary action, ' +
+      'e.g. "book a consultation", "call now", "get a quote"), "layout_variant" (one of "A" or "B" — A = ' +
+      "minimal/cinematic single focal point, best for editorial/luxury/hospitality/personal-brand " +
+      'niches; B = collage/layered multi-card composition, best for niches with a real product/service ' +
+      'to visually prove), "layout_variant_reason" (one sentence on why that variant fits this specific ' +
+      "business). Every value must be a deliberate choice justified by this business's actual niche — " +
+      "never default to the same values you'd give a different kind of business. Output ONLY the JSON " +
+      "object, no markdown fencing, no commentary.",
     user: `Business: ${prospect.business_name ?? "Unknown"}\nCategory: ${prospect.category ?? "Unknown"}\nNotes: ${prospect.notes ?? "None"}`,
   });
 
@@ -91,7 +103,55 @@ async function runSourcingAssets(env: Env, message: BuildJobMessage): Promise<vo
   await enqueue(env, { ...message, stage: "generating" });
 }
 
+interface Personalization {
+  industry_vibe?: string;
+  color_direction?: {
+    base_tone?: string;
+    background_gradient?: string[];
+    accent_color?: string;
+  };
+  imagery_style?: string;
+  hero_bleed?: boolean;
+  typography_personality?: string;
+  tone_of_copy?: string;
+  cta_goal?: string;
+  layout_variant?: string;
+  layout_variant_reason?: string;
+  raw?: string;
+}
+
+function formatPersonalization(designBriefJson: string | null): string {
+  if (!designBriefJson) return "None provided.";
+  let parsed: Personalization;
+  try {
+    parsed = JSON.parse(designBriefJson) as Personalization;
+  } catch {
+    return designBriefJson;
+  }
+  if (parsed.raw) return parsed.raw;
+
+  const gradient = parsed.color_direction?.background_gradient?.join(" → ") ?? "Unknown";
+  return (
+    `Industry/vibe: ${parsed.industry_vibe ?? "Unknown"}\n` +
+    `Base tone: ${parsed.color_direction?.base_tone ?? "Unknown"}\n` +
+    `Background gradient: ${gradient}\n` +
+    `Accent color (CTA + key highlights only): ${parsed.color_direction?.accent_color ?? "Unknown"}\n` +
+    `Imagery style: ${parsed.imagery_style ?? "Unknown"}\n` +
+    `Hero bleeds off viewport edge: ${parsed.hero_bleed ? "yes" : "no"}\n` +
+    `Typography personality: ${parsed.typography_personality ?? "Unknown"}\n` +
+    `Tone of copy: ${parsed.tone_of_copy ?? "Unknown"}\n` +
+    `Primary CTA goal: ${parsed.cta_goal ?? "Unknown"}\n` +
+    `Layout variant: ${parsed.layout_variant ?? "Unknown"} (${parsed.layout_variant_reason ?? "no reason given"})`
+  );
+}
+
 // --- Stage: generating (composes the Claude Code build prompt) ------------
+// The frozen CORE_CHASSIS + NON_NEGOTIABLE_CONSTRAINTS (chassis.ts) are
+// injected verbatim, in code -- not written by the LLM -- so the structural
+// techniques (3D depth, section bleed, no-overlap, minimum imagery) never
+// get diluted in paraphrase. The LLM's only job is the genuinely creative,
+// niche-specific part: page structure and copy that actually fits this one
+// business, layered on top of the frozen system.
 async function runGenerating(env: Env, message: BuildJobMessage): Promise<void> {
   await setBuildStatus(env, message.buildId, "generating");
   const build = await getBuild(env, message.buildId);
@@ -102,39 +162,46 @@ async function runGenerating(env: Env, message: BuildJobMessage): Promise<void> 
       ? "This site also needs a booking/ordering portal — a simple page where customers can book an appointment or place an order, with a basic admin view for the owner."
       : "This is a website-only build — no booking/ordering portal needed.";
 
-  const prompt = await completeChat(env, {
+  const personalization = formatPersonalization(build.design_brief_json);
+
+  const nicheContent = await completeChat(env, {
     system:
-      "You are an expert prompt engineer writing instructions for Claude Code, an AI coding agent. " +
-      "Write a single, extremely detailed, ready-to-paste prompt that will let Claude Code one-shot build " +
-      "a complete, polished, avant-garde/agency-quality static website — plain HTML/CSS/vanilla JS, no build " +
-      "step, no framework, no dependencies, mobile-responsive, ready to deploy directly to Cloudflare Pages. " +
-      "Include: an appropriate page structure for the business's niche, specific brand direction (colors, " +
-      "fonts, tone, and the one structural device named in the design brief) drawn from the provided design " +
-      "brief, copywriting guidance, and an instruction to use AI-generated placeholder imagery if no real " +
-      "photos are supplied. The prompt you write MUST state these two constraints explicitly and " +
-      "non-negotiably: (1) any decorative or overlapping visual element (tags, rotated blocks, oversized " +
-      "numerals, pull-quotes, etc.) is positioned only over genuinely empty space and must never overlap or " +
-      "obscure body copy or headline text at any breakpoint — check this before considering the build done; " +
-      "(2) at least one element per major section visually breaks out of the centered content container " +
-      "(e.g. a full-bleed image or color block using a 100vw/negative-margin breakout technique), and " +
-      "feature/offering sections use irregular, unequal column spans rather than a symmetric row of equal-" +
-      "width cards — a generic evenly-spaced three- or four-card grid is explicitly not acceptable; " +
-      "(3) every major section (hero, philosophy/manifesto, each feature/offering block or between offering " +
-      "pairs, process, footer) includes at least one distinct image or illustrative visual of its own — a " +
-      "page carrying most of its content as pure typography/color blocks with only one or two images total " +
-      "for the whole site is not acceptable. Vary the imagery treatment across sections (some full-bleed " +
-      "photographic, some smaller inline illustrative accents, different AI-image prompts per section) " +
-      "rather than reusing the same one or two visuals throughout. Output ONLY the prompt text — no " +
-      "preamble, no markdown fencing, no commentary about what you wrote.",
+      "You are a web strategist and copywriter. Given a business and its personalization layer, write " +
+      "two things: (1) an appropriate page structure for this specific niche — a list of sections with a " +
+      "one-line description of what each holds; (2) copywriting guidance — the actual voice, 2-3 sample " +
+      "headline ideas, and language specific to this business's real specialty (use real terminology from " +
+      "its niche, not generic marketing language). Everything must sound like it was written for this " +
+      "exact business, never reusable for a different one. Output ONLY this content, concise, no preamble, " +
+      "no markdown fencing.",
     user:
       `Business: ${prospect.business_name ?? "Unknown"}\n` +
       `Category: ${prospect.category ?? "Unknown"}\n` +
       `Address: ${prospect.address ?? "Unknown"}\n` +
       `Phone: ${prospect.phone ?? "Unknown"}\n` +
       `Notes: ${prospect.notes ?? "None"}\n` +
-      `Design brief: ${build.design_brief_json ?? "None provided"}\n` +
+      `Personalization layer:\n${personalization}\n` +
       `${tierNote}`,
   });
+
+  const prompt =
+    `You are Claude Code, an expert AI coding agent. Build a complete, production-ready static website ` +
+    `for "${prospect.business_name ?? "this business"}". Plain HTML, CSS, and vanilla JavaScript only — ` +
+    `no build step, no framework, no npm dependencies. Mobile-responsive. Ready to deploy directly to ` +
+    `Cloudflare Pages (index.html, styles.css, script.js, relative links).\n\n` +
+    `${CORE_CHASSIS}\n\n` +
+    `## CLIENT PERSONALIZATION\n${personalization}\n\n` +
+    `## NICHE-SPECIFIC STRUCTURE & COPY\n${nicheContent}\n\n` +
+    `${NON_NEGOTIABLE_CONSTRAINTS}\n\n` +
+    `## BUSINESS DETAILS\n` +
+    `Address: ${prospect.address ?? "Unknown — wrap any invented placeholder in an HTML comment REPLACE_WITH_REAL"}\n` +
+    `Phone: ${prospect.phone ?? "Unknown — wrap any invented placeholder in an HTML comment REPLACE_WITH_REAL"}\n` +
+    `Notes: ${prospect.notes ?? "None"}\n` +
+    `${tierNote}\n\n` +
+    `## IMAGERY\nNo real photos supplied unless referenced in notes above. Use AI-generated placeholder ` +
+    `imagery (e.g. via https://image.pollinations.ai/prompt/{url-encoded description}?width=1200&height=800) ` +
+    `or inline SVG, matching the imagery_style above. Vary the prompt per section for distinct imagery, ` +
+    `not the same image repeated.\n\n` +
+    `Build now.`;
 
   await env.DB.prepare("UPDATE builds SET build_prompt = ?, status = 'awaiting_manual_build', updated_at = ? WHERE id = ?")
     .bind(prompt, nowIso(), message.buildId)
