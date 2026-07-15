@@ -68,6 +68,11 @@ export const api = {
     }),
   sendPaymentLink: (id) => request(`/prospects/${id}/send-payment-link`, { method: 'POST' }),
   getHandover: (paymentId) => request(`/payments/${paymentId}/handover`),
+  addActivity: (prospectId, fields) =>
+    request(`/prospects/${prospectId}/activities`, {
+      method: 'POST',
+      body: JSON.stringify(fields),
+    }),
 }
 
 export async function checkConnection() {

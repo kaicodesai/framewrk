@@ -1,4 +1,4 @@
-import type { Env, Prospect, Build, ServiceTier } from "../types";
+import type { Env, Prospect, Build, Activity, ServiceTier } from "../types";
 import { json, badRequest, notFound } from "../lib/http";
 import { parseGoogleMapsUrl, lookupPlaceDetails } from "../lib/googleMaps";
 
@@ -95,7 +95,13 @@ export async function getProspect(env: Env, id: string): Promise<Response> {
     .bind(id)
     .all<Build>();
 
-  return json({ ...prospect, builds });
+  const { results: activities } = await env.DB.prepare(
+    "SELECT * FROM activities WHERE prospect_id = ? ORDER BY created_at DESC"
+  )
+    .bind(id)
+    .all<Activity>();
+
+  return json({ ...prospect, builds, activities });
 }
 
 export async function updateProspect(request: Request, env: Env, id: string): Promise<Response> {

@@ -13,6 +13,7 @@ import {
   startBuild,
 } from "./routes/prospects";
 import { getBuild, getBuildJobs, submitPreview } from "./routes/builds";
+import { createActivity, listActivities } from "./routes/activities";
 import { runStage } from "./pipeline/stages";
 
 async function route(request: Request, env: Env): Promise<Response> {
@@ -53,6 +54,14 @@ async function route(request: Request, env: Env): Promise<Response> {
   const buildMatch = pathname.match(/^\/prospects\/([^/]+)\/build$/);
   if (buildMatch && method === "POST") {
     return startBuild(request, env, buildMatch[1]);
+  }
+
+  const activitiesMatch = pathname.match(/^\/prospects\/([^/]+)\/activities$/);
+  if (activitiesMatch && method === "POST") {
+    return createActivity(request, env, activitiesMatch[1]);
+  }
+  if (activitiesMatch && method === "GET") {
+    return listActivities(env, activitiesMatch[1]);
   }
 
   const buildDetailMatch = pathname.match(/^\/builds\/([^/]+)$/);

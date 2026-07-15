@@ -102,3 +102,13 @@ export interface Job {
   created_at: string;
   updated_at: string;
 }
+
+export type ActivityType = "call" | "email" | "sms" | "meeting" | "note";
+
+export interface Activity {
+  id: string;
+  prospect_id: string;
+  type: ActivityType;
+  body: string | null;
+  created_at: string;
+}
