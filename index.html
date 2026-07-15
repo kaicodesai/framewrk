@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231F2E29'/%3E%3Ccircle cx='16' cy='16' r='6' fill='%232C8C7C'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://api.fontshare.com">
 <link href="https://api.fontshare.com/v2/css?f[]=general-sans@500,600,700&f[]=erode@400,500&f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=f21b51cd">
 </head>
 <body>
 
@@ -31,6 +31,15 @@
       <stop offset="0%" stop-color="#C9A47C" stop-opacity="0.45"/>
       <stop offset="100%" stop-color="#C9A47C" stop-opacity="0"/>
     </radialGradient>
+    <linearGradient id="strokeDeep" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2C8C7C"/>
+      <stop offset="100%" stop-color="#164F45"/>
+    </linearGradient>
+    <!-- soft echo shadow, drawn behind every icon in one consistent
+         down-right light direction, matching the card shadow system -->
+    <filter id="iconShadow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
   </defs>
 </svg>
 
@@ -83,7 +92,7 @@
             <rect width="1400" height="1000" fill="url(#gradWarm)"/>
             <circle cx="1180" cy="150" r="280" fill="url(#glowMint)"/>
             <circle cx="120" cy="880" r="240" fill="url(#glowClay)"/>
-            <g transform="translate(660,90)" fill="none" stroke="#1D6357" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(668,102)" fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
               <path d="M40 0 C74 27 6 51 40 78 C6 105 74 129 40 156 C74 183 6 207 40 234 C6 261 74 285 40 312 C74 339 6 363 40 390 C6 417 74 441 40 468 C74 495 6 519 40 546 C6 573 74 597 40 624 C74 651 6 675 40 702 C6 729 74 753 40 780"/>
               <ellipse cx="40" cy="39" rx="29" ry="16"/>
               <ellipse cx="40" cy="117" rx="29" ry="16"/>
@@ -96,7 +105,28 @@
               <ellipse cx="40" cy="663" rx="29" ry="16"/>
               <ellipse cx="40" cy="741" rx="29" ry="16"/>
             </g>
-            <g transform="translate(400,540) scale(1.35)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.75">
+            <g transform="translate(660,90)" fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M40 0 C74 27 6 51 40 78 C6 105 74 129 40 156 C74 183 6 207 40 234 C6 261 74 285 40 312 C74 339 6 363 40 390 C6 417 74 441 40 468 C74 495 6 519 40 546 C6 573 74 597 40 624 C74 651 6 675 40 702 C6 729 74 753 40 780"/>
+              <ellipse cx="40" cy="39" rx="29" ry="16"/>
+              <ellipse cx="40" cy="117" rx="29" ry="16"/>
+              <ellipse cx="40" cy="195" rx="29" ry="16"/>
+              <ellipse cx="40" cy="273" rx="29" ry="16"/>
+              <ellipse cx="40" cy="351" rx="29" ry="16"/>
+              <ellipse cx="40" cy="429" rx="29" ry="16"/>
+              <ellipse cx="40" cy="507" rx="29" ry="16"/>
+              <ellipse cx="40" cy="585" rx="29" ry="16"/>
+              <ellipse cx="40" cy="663" rx="29" ry="16"/>
+              <ellipse cx="40" cy="741" rx="29" ry="16"/>
+            </g>
+            <g transform="translate(408,548) scale(1.35)" fill="none" stroke="#0F0B08" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.25" filter="url(#iconShadow)">
+              <rect x="55" y="145" width="130" height="65" rx="32"/>
+              <rect x="67" y="67" width="16" height="78" rx="8"/>
+              <rect x="93" y="53" width="16" height="92" rx="8"/>
+              <rect x="119" y="57" width="16" height="88" rx="8"/>
+              <rect x="145" y="77" width="16" height="68" rx="8"/>
+              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
+            </g>
+            <g transform="translate(400,540) scale(1.35)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
               <rect x="55" y="145" width="130" height="65" rx="32"/>
               <rect x="67" y="67" width="16" height="78" rx="8"/>
               <rect x="93" y="53" width="16" height="92" rx="8"/>
@@ -113,10 +143,13 @@
             <rect width="900" height="1100" fill="url(#gradSage)"/>
             <circle cx="740" cy="220" r="240" fill="url(#glowMint)"/>
             <circle cx="120" cy="920" r="180" fill="url(#glowClay)"/>
-            <g transform="translate(150,260)" fill="none" stroke="#1D6357" stroke-width="9" stroke-linecap="round">
+            <g transform="translate(158,272)" fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" opacity="0.3" filter="url(#iconShadow)">
               <rect x="0" y="0" width="600" height="560" rx="280"/>
-              <path d="M120 280 a180 180 0 1 0 360 0" opacity="0.5"/>
-              <path d="M170 280 a130 130 0 1 0 260 0" opacity="0.35"/>
+            </g>
+            <g transform="translate(150,260)" fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round">
+              <rect x="0" y="0" width="600" height="560" rx="280"/>
+              <path d="M120 280 a180 180 0 1 0 360 0" opacity="0.55"/>
+              <path d="M170 280 a130 130 0 1 0 260 0" opacity="0.4"/>
             </g>
             <g fill="#1D6357" opacity="0.55">
               <circle cx="270" cy="640" r="10"/>
@@ -151,7 +184,15 @@
             <rect width="900" height="1000" fill="url(#gradWarm)"/>
             <circle cx="700" cy="200" r="230" fill="url(#glowMint)"/>
             <circle cx="150" cy="800" r="200" fill="url(#glowClay)"/>
-            <g transform="translate(300,340) scale(2.15)" fill="none" stroke="#1D6357" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(312,354) scale(2.15)" fill="none" stroke="#164F45" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
+              <rect x="55" y="145" width="130" height="65" rx="32"/>
+              <rect x="67" y="67" width="16" height="78" rx="8"/>
+              <rect x="93" y="53" width="16" height="92" rx="8"/>
+              <rect x="119" y="57" width="16" height="88" rx="8"/>
+              <rect x="145" y="77" width="16" height="68" rx="8"/>
+              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
+            </g>
+            <g transform="translate(300,340) scale(2.15)" fill="none" stroke="url(#strokeDeep)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
               <rect x="55" y="145" width="130" height="65" rx="32"/>
               <rect x="67" y="67" width="16" height="78" rx="8"/>
               <rect x="93" y="53" width="16" height="92" rx="8"/>
@@ -175,7 +216,7 @@
               <rect width="1200" height="1400" fill="url(#gradWarm)"/>
               <circle cx="950" cy="260" r="320" fill="url(#glowMint)"/>
               <circle cx="180" cy="1180" r="260" fill="url(#glowClay)"/>
-              <g transform="translate(500,150)" fill="none" stroke="#1D6357" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+              <g transform="translate(508,162)" fill="none" stroke="#164F45" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
                 <path d="M60 0 C104 38 16 72 60 110 C16 148 104 182 60 220 C104 258 16 292 60 330 C16 368 104 402 60 440 C104 478 16 512 60 550 C16 588 104 622 60 660 C104 698 16 732 60 770 C16 808 104 842 60 880 C104 918 16 952 60 990"/>
                 <ellipse cx="60" cy="55" rx="33" ry="18"/>
                 <ellipse cx="60" cy="165" rx="33" ry="18"/>
@@ -187,7 +228,27 @@
                 <ellipse cx="60" cy="825" rx="33" ry="18"/>
                 <ellipse cx="60" cy="935" rx="33" ry="18"/>
               </g>
-              <g transform="translate(230,720) scale(1.65)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.78">
+              <g transform="translate(500,150)" fill="none" stroke="url(#strokeDeep)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M60 0 C104 38 16 72 60 110 C16 148 104 182 60 220 C104 258 16 292 60 330 C16 368 104 402 60 440 C104 478 16 512 60 550 C16 588 104 622 60 660 C104 698 16 732 60 770 C16 808 104 842 60 880 C104 918 16 952 60 990"/>
+                <ellipse cx="60" cy="55" rx="33" ry="18"/>
+                <ellipse cx="60" cy="165" rx="33" ry="18"/>
+                <ellipse cx="60" cy="275" rx="33" ry="18"/>
+                <ellipse cx="60" cy="385" rx="33" ry="18"/>
+                <ellipse cx="60" cy="495" rx="33" ry="18"/>
+                <ellipse cx="60" cy="605" rx="33" ry="18"/>
+                <ellipse cx="60" cy="715" rx="33" ry="18"/>
+                <ellipse cx="60" cy="825" rx="33" ry="18"/>
+                <ellipse cx="60" cy="935" rx="33" ry="18"/>
+              </g>
+              <g transform="translate(238,728) scale(1.65)" fill="none" stroke="#0F0B08" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.25" filter="url(#iconShadow)">
+                <rect x="55" y="145" width="130" height="65" rx="32"/>
+                <rect x="67" y="67" width="16" height="78" rx="8"/>
+                <rect x="93" y="53" width="16" height="92" rx="8"/>
+                <rect x="119" y="57" width="16" height="88" rx="8"/>
+                <rect x="145" y="77" width="16" height="68" rx="8"/>
+                <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
+              </g>
+              <g transform="translate(230,720) scale(1.65)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
                 <rect x="55" y="145" width="130" height="65" rx="32"/>
                 <rect x="67" y="67" width="16" height="78" rx="8"/>
                 <rect x="93" y="53" width="16" height="92" rx="8"/>
@@ -240,10 +301,13 @@
               <rect width="1200" height="1400" fill="url(#gradSage)"/>
               <circle cx="950" cy="280" r="320" fill="url(#glowMint)"/>
               <circle cx="200" cy="1180" r="260" fill="url(#glowClay)"/>
-              <g transform="translate(210,340)" fill="none" stroke="#1D6357" stroke-width="10" stroke-linecap="round">
+              <g transform="translate(220,354)" fill="none" stroke="#164F45" stroke-width="10" stroke-linecap="round" opacity="0.3" filter="url(#iconShadow)">
                 <rect x="0" y="0" width="780" height="680" rx="340"/>
-                <path d="M150 340 a240 240 0 1 0 480 0" opacity="0.5"/>
-                <path d="M220 340 a170 170 0 1 0 340 0" opacity="0.35"/>
+              </g>
+              <g transform="translate(210,340)" fill="none" stroke="url(#strokeDeep)" stroke-width="10" stroke-linecap="round">
+                <rect x="0" y="0" width="780" height="680" rx="340"/>
+                <path d="M150 340 a240 240 0 1 0 480 0" opacity="0.55"/>
+                <path d="M220 340 a170 170 0 1 0 340 0" opacity="0.4"/>
               </g>
               <g fill="#1D6357" opacity="0.55">
                 <circle cx="360" cy="1120" r="14"/>
@@ -280,7 +344,18 @@
             <rect width="900" height="1000" fill="url(#gradSage)"/>
             <circle cx="720" cy="220" r="240" fill="url(#glowMint)"/>
             <circle cx="150" cy="820" r="200" fill="url(#glowClay)"/>
-            <g transform="translate(380,110)" fill="none" stroke="#1D6357" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(388,122)" fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
+              <path d="M50 0 C82 28 18 53 50 81 C18 109 82 134 50 162 C82 190 18 215 50 243 C18 271 82 296 50 324 C82 352 18 377 50 405 C18 433 82 458 50 486 C82 514 18 539 50 567 C18 595 82 620 50 648"/>
+              <ellipse cx="50" cy="40" rx="26" ry="15"/>
+              <ellipse cx="50" cy="122" rx="26" ry="15"/>
+              <ellipse cx="50" cy="202" rx="26" ry="15"/>
+              <ellipse cx="50" cy="284" rx="26" ry="15"/>
+              <ellipse cx="50" cy="364" rx="26" ry="15"/>
+              <ellipse cx="50" cy="446" rx="26" ry="15"/>
+              <ellipse cx="50" cy="526" rx="26" ry="15"/>
+              <ellipse cx="50" cy="608" rx="26" ry="15"/>
+            </g>
+            <g transform="translate(380,110)" fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
               <path d="M50 0 C82 28 18 53 50 81 C18 109 82 134 50 162 C82 190 18 215 50 243 C18 271 82 296 50 324 C82 352 18 377 50 405 C18 433 82 458 50 486 C82 514 18 539 50 567 C18 595 82 620 50 648"/>
               <ellipse cx="50" cy="40" rx="26" ry="15"/>
               <ellipse cx="50" cy="122" rx="26" ry="15"/>
@@ -321,7 +396,15 @@
           <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of an adjustment table in a sunlit room">
             <rect width="1000" height="1200" fill="url(#gradWarm)"/>
             <circle cx="800" cy="220" r="260" fill="url(#glowMint)"/>
-            <g fill="none" stroke="#1D6357" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+            <g fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
+              <rect x="180" y="560" width="640" height="130" rx="40"/>
+              <rect x="230" y="480" width="220" height="90" rx="34"/>
+              <path d="M240 690 L240 810"/>
+              <path d="M760 690 L760 810"/>
+              <path d="M240 810 L200 810"/>
+              <path d="M760 810 L800 810"/>
+            </g>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
               <rect x="180" y="560" width="640" height="130" rx="40"/>
               <rect x="230" y="480" width="220" height="90" rx="34"/>
               <path d="M240 690 L240 810"/>
@@ -342,10 +425,13 @@
           <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a hyperbaric chamber room porthole with soft ambient light">
             <rect width="1000" height="1200" fill="url(#gradSage)"/>
             <circle cx="220" cy="900" r="260" fill="url(#glowClay)"/>
-            <g fill="none" stroke="#1D6357" stroke-width="10">
+            <g fill="none" stroke="#164F45" stroke-width="10" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
               <circle cx="500" cy="480" r="280"/>
-              <circle cx="500" cy="480" r="210" opacity="0.55"/>
-              <circle cx="500" cy="480" r="140" opacity="0.35"/>
+            </g>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-width="10">
+              <circle cx="500" cy="480" r="280"/>
+              <circle cx="500" cy="480" r="210" opacity="0.6"/>
+              <circle cx="500" cy="480" r="140" opacity="0.4"/>
             </g>
             <g fill="#1D6357" opacity="0.5">
               <circle cx="330" cy="860" r="12"/>
@@ -361,11 +447,23 @@
           <svg class="illustration" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a hand adjusting a treatment table strap">
             <rect width="1000" height="800" fill="url(#gradWarm)"/>
             <circle cx="180" cy="150" r="200" fill="url(#glowMint)"/>
-            <g fill="none" stroke="#1D6357" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.9">
+            <g fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
               <rect x="470" y="330" width="300" height="66" rx="20"/>
               <rect x="560" y="316" width="90" height="94" rx="16"/>
             </g>
-            <g transform="translate(260,430) scale(1.5)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.8">
+            <g fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="470" y="330" width="300" height="66" rx="20"/>
+              <rect x="560" y="316" width="90" height="94" rx="16"/>
+            </g>
+            <g transform="translate(268,442) scale(1.5)" fill="none" stroke="#0F0B08" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.25" filter="url(#iconShadow)">
+              <rect x="55" y="145" width="130" height="65" rx="32"/>
+              <rect x="67" y="67" width="16" height="78" rx="8"/>
+              <rect x="93" y="53" width="16" height="92" rx="8"/>
+              <rect x="119" y="57" width="16" height="88" rx="8"/>
+              <rect x="145" y="77" width="16" height="68" rx="8"/>
+              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
+            </g>
+            <g transform="translate(260,430) scale(1.5)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
               <rect x="55" y="145" width="130" height="65" rx="32"/>
               <rect x="67" y="67" width="16" height="78" rx="8"/>
               <rect x="93" y="53" width="16" height="92" rx="8"/>
@@ -405,7 +503,13 @@
           <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a cozy armchair beside a plant, evoking a welcoming reception area">
             <rect width="1000" height="1200" fill="url(#gradWarm)"/>
             <circle cx="780" cy="240" r="260" fill="url(#glowMint)"/>
-            <g fill="none" stroke="#1D6357" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+            <g fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
+              <path d="M280 620 L280 900 Q280 950 330 950 L620 950 Q670 950 670 900 L670 620"/>
+              <path d="M240 640 Q240 560 320 560 L630 560 Q710 560 710 640 L710 760 Q710 800 670 800 L280 800 Q240 800 240 760 Z"/>
+              <path d="M280 950 L260 1020"/>
+              <path d="M670 950 L690 1020"/>
+            </g>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
               <path d="M280 620 L280 900 Q280 950 330 950 L620 950 Q670 950 670 900 L670 620"/>
               <path d="M240 640 Q240 560 320 560 L630 560 Q710 560 710 640 L710 760 Q710 800 670 800 L280 800 Q240 800 240 760 Z"/>
               <path d="M280 950 L260 1020"/>
@@ -453,7 +557,15 @@
               <path d="M450 160 L540 140"/>
               <path d="M450 160 L360 140"/>
             </g>
-            <g transform="translate(450,470)" fill="none" stroke="#1D6357" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(458,482)" fill="none" stroke="#164F45" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
+              <circle cx="0" cy="-210" r="46"/>
+              <path d="M0 -164 L0 30"/>
+              <path d="M0 -120 L-130 -230"/>
+              <path d="M0 -120 L130 -230"/>
+              <path d="M0 30 L-90 220"/>
+              <path d="M0 30 L90 220"/>
+            </g>
+            <g transform="translate(450,470)" fill="none" stroke="url(#strokeDeep)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="0" cy="-210" r="46"/>
               <path d="M0 -164 L0 30"/>
               <path d="M0 -120 L-130 -230"/>
@@ -474,7 +586,7 @@
       <svg class="illustration" viewBox="0 0 1800 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a sunlit corridor archway flanked by plants">
         <rect width="1800" height="1000" fill="url(#gradWarm)"/>
         <circle cx="900" cy="260" r="420" fill="url(#glowMint)"/>
-        <g fill="none" stroke="#1D6357" stroke-width="12">
+        <g fill="none" stroke="url(#strokeDeep)" stroke-width="12">
           <path d="M700 1000 L700 500 Q700 340 900 340 Q1100 340 1100 500 L1100 1000"/>
         </g>
         <g transform="translate(430,620)" fill="none" stroke="#2C8C7C" stroke-width="8" stroke-linecap="round">
@@ -539,7 +651,10 @@
               <path d="M280 220 L225 220"/>
               <path d="M620 220 L675 220"/>
             </g>
-            <g fill="none" stroke="#1D6357" stroke-width="11">
+            <g fill="none" stroke="#164F45" stroke-width="11" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
+              <path d="M310 1000 L310 560 Q310 420 450 420 Q590 420 590 560 L590 1000"/>
+            </g>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-width="11">
               <path d="M310 1000 L310 560 Q310 420 450 420 Q590 420 590 560 L590 1000"/>
             </g>
             <g transform="translate(120,700)" fill="none" stroke="#2C8C7C" stroke-width="7" stroke-linecap="round">
@@ -558,6 +673,6 @@
 
 </main>
 
-<script src="script.js"></script>
+<script src="script.js?v=bb9b3a26"></script>
 </body>
 </html>
