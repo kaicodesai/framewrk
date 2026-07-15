@@ -1,0 +1,460 @@
+/* ===========================================================
+   Hands On Wellness — Chiropractic & Hyperbaric Oxygen Therapy
+   Warm, humanist, collage/layered design system with real CSS
+   3D depth: perspective + rotateX/Y + translateZ, cursor tilt,
+   scroll-driven depth parallax, idle float. Continuous warm
+   gradient canvas behind the whole page — no flat section blocks.
+   =========================================================== */
+
+:root {
+  --bg-1: #F8F4EF;
+  --bg-2: #EDE3D5;
+  --bg-3: #E0D2BD;
+
+  --text: #241D19;
+  --text-soft: #534840;
+  --accent: #2C8C7C;
+  --accent-text: #1D6357;
+  --accent-light: #BFE3DF;
+  --btn-ink: #150F0B;
+
+  --dark-card: #1F2E29;
+  --dark-card-text: #F8F4EF;
+
+  --font-head: "General Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Erode", Georgia, "Times New Roman", serif;
+  --font-body: "Satoshi", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --container-max: 1200px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+
+  --radius-lg: 30px;
+  --radius-md: 20px;
+  --radius-pill: 999px;
+
+  /* one consistent light direction/intensity for every shadow on the page */
+  --shadow-soft: 0 34px 64px -26px rgba(36, 29, 25, 0.34), 0 12px 26px -16px rgba(36, 29, 25, 0.2);
+  --shadow-soft-dark: 0 34px 64px -26px rgba(0, 0, 0, 0.55), 0 12px 26px -16px rgba(0, 0, 0, 0.35);
+
+  --ease: cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body, h1, h2, h3, h4, p, figure, blockquote, ul, ol { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+img { max-width: 100%; height: auto; display: block; background: var(--bg-2); overflow: hidden; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; background: none; border: none; cursor: pointer; }
+
+body {
+  position: relative;
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.65;
+  font-size: 1rem;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 30%, var(--bg-1) 55%, var(--bg-2) 75%, var(--bg-3) 100%);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-head);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+h2 { font-size: clamp(1.9rem, 3.5vw, 2.9rem); }
+h3 { font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 600; }
+h4 { font-family: var(--font-body); font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-text); }
+
+/* the signature tension pairing: bold humanist sans + soft serif accent,
+   identical wherever a headline uses it */
+em, .accent-serif {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-weight: 400;
+  color: var(--accent-text);
+}
+
+p { max-width: 62ch; color: var(--text-soft); }
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--accent);
+  color: var(--dark-card-text);
+  padding: 0.75rem 1.25rem;
+  z-index: 1000;
+  border-radius: var(--radius-md);
+}
+.skip-link:focus { left: 1rem; top: 1rem; }
+
+/* ===========================================================
+   Background canvas
+   =========================================================== */
+.bg-canvas { position: absolute; inset: 0; height: 100%; overflow: hidden; pointer-events: none; z-index: 0; }
+.glow {
+  position: absolute;
+  width: 40vw; height: 40vw; max-width: 620px; max-height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-light) 0%, transparent 70%);
+  filter: blur(90px);
+  opacity: 0.3;
+}
+.glow-sm { width: 24vw; height: 24vw; max-width: 360px; max-height: 360px; opacity: 0.26; }
+.glow-lg { width: 52vw; height: 52vw; max-width: 760px; max-height: 760px; opacity: 0.24; }
+@media (max-width: 640px) { .glow { display: none; } }
+
+/* ---------- Layout ---------- */
+.container { max-width: var(--container-max); margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 1; }
+.bleed { width: 100vw; position: relative; left: 50%; margin-left: -50vw; }
+
+/* CSS Grid items default to min-width:auto (content-based), which can force
+   a track — and the whole page — wider than the viewport. Every grid used
+   on this site is a two-item text/visual split, so this is safe globally. */
+.philosophy-grid > *, .offering-grid > *, .repair-grid > *, .visit-grid > *,
+.footer-grid > *, .stories-grid > * { min-width: 0; }
+
+.kicker { display: inline-block; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-text); margin-bottom: 1rem; }
+.kicker-light { color: var(--accent-light); }
+.section-headline { max-width: 34rem; }
+.lede { font-size: 1.08rem; color: var(--text-soft); max-width: 54ch; margin-top: 1.1rem; }
+/* dark-glass-card overrides: must be declared after .lede/.kicker/etc so
+   equal-specificity class combos (e.g. "lede on-dark-soft") resolve correctly */
+.on-dark { color: var(--dark-card-text); }
+.on-dark-em { color: var(--accent-light); }
+.on-dark-soft { color: rgba(248, 244, 239, 0.82); }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.9rem 1.75rem; border-radius: var(--radius-pill);
+  font-weight: 700; font-size: 0.95rem; text-align: center;
+  max-width: 100%;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+}
+.btn-primary { background: var(--accent); color: var(--btn-ink); box-shadow: 0 18px 34px -16px rgba(44, 140, 124, 0.55); }
+.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 24px 42px -16px rgba(44, 140, 124, 0.6); }
+.btn-ghost { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); color: var(--text); border: 1px solid rgba(36, 29, 25, 0.12); }
+.btn-ghost:hover { transform: translateY(-3px); background: rgba(255, 255, 255, 0.65); }
+.btn-header { padding: 0.65rem 1.4rem; font-size: 0.85rem; }
+
+/* ===========================================================
+   Glass surfaces
+   =========================================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+.glass-dark {
+  background: rgba(31, 46, 41, 0.86);
+  border: 1px solid rgba(248, 244, 239, 0.14);
+  color: var(--dark-card-text);
+  box-shadow: var(--shadow-soft-dark);
+}
+
+/* ===========================================================
+   SPATIAL 3D DEPTH SYSTEM
+   perspective lives on the section; .tilt gets real rotateX/Y +
+   translateZ driven by JS (cursor) and scroll depth; .float-wrap
+   carries the idle bob keyframe so the two transforms never
+   collide on the same element.
+   =========================================================== */
+.hero, .philosophy, .offering, .repair-path, .clinic, .visit, .stories, .book, .site-footer {
+  perspective: 1600px;
+}
+
+.tilt {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transform: perspective(1600px) rotateX(0deg) rotateY(0deg) translateZ(0px);
+  transition: transform 0.15s linear;
+}
+.tilt img { border-radius: var(--radius-lg); }
+.tilt.glass { padding: 1.5rem 1.75rem; }
+
+/* JS only ever writes the --scroll-shift/--scroll-scale custom properties
+   (scroll-driven depth parallax) — it never touches `transform` directly on
+   these wrappers, so it can never fight the idle-float keyframe animation
+   that also animates `transform` on the same element. */
+@keyframes float-idle {
+  0%, 100% { transform: translateY(var(--scroll-shift, 0px)) translateY(0) scale(var(--scroll-scale, 1)); }
+  50% { transform: translateY(var(--scroll-shift, 0px)) translateY(-10px) scale(var(--scroll-scale, 1)); }
+}
+.float-wrap {
+  --scroll-shift: 0px;
+  --scroll-scale: 1;
+  animation: float-idle 7s ease-in-out infinite;
+}
+.float-wrap:nth-of-type(2n) { animation-duration: 8.5s; animation-delay: -1.5s; }
+.float-wrap:nth-of-type(3n) { animation-duration: 6.2s; animation-delay: -3s; }
+
+.depth-wrap {
+  position: relative;
+  --scroll-shift: 0px;
+  --scroll-scale: 1;
+  transform: translateY(var(--scroll-shift)) scale(var(--scroll-scale));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .float-wrap { animation: none; transform: none !important; }
+  .depth-wrap { transform: none !important; }
+  .tilt { transition: none; transform: none !important; }
+  html { scroll-behavior: auto; }
+}
+
+/* image edge softening */
+.mask-fade {
+  -webkit-mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 82%, transparent 100%);
+}
+
+/* ===========================================================
+   Scroll-reveal
+   =========================================================== */
+[data-reveal] { opacity: 0; transform: translateY(26px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { [data-reveal] { opacity: 1; transform: none; transition: none; } }
+
+/* ===========================================================
+   Header
+   =========================================================== */
+.site-header {
+  position: sticky; top: 0; z-index: 500;
+  background: rgba(248, 244, 239, 0.55);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(36, 29, 25, 0.06);
+  transition: background 0.4s var(--ease);
+}
+.site-header.scrolled { background: rgba(248, 244, 239, 0.86); }
+.header-inner { max-width: var(--container-max); margin: 0 auto; padding: 1rem var(--gutter); display: flex; align-items: center; gap: 2rem; }
+.wordmark { font-family: var(--font-head); font-weight: 600; font-size: 1.05rem; letter-spacing: -0.01em; white-space: nowrap; }
+.wordmark span { color: var(--accent-text); margin-left: 0.35em; }
+.main-nav { display: flex; gap: 1.6rem; margin-right: auto; margin-left: 1rem; }
+.main-nav a { font-size: 0.94rem; font-weight: 500; color: var(--text-soft); transition: color 0.25s var(--ease); }
+.main-nav a:hover { color: var(--accent-text); }
+
+.nav-toggle { display: none; flex-direction: column; justify-content: center; gap: 5px; width: 32px; height: 32px; padding: 0; }
+.nav-toggle span { display: block; height: 2px; width: 100%; background: var(--text); border-radius: 2px; transition: transform 0.25s var(--ease), opacity 0.25s var(--ease); }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ===========================================================
+   1. Hero — layered collage, off-edge bleed
+   =========================================================== */
+.hero { padding-top: clamp(3rem, 8vw, 6rem); position: relative; z-index: 1; }
+.hero-copy { max-width: 720px; }
+.hero-headline { font-size: clamp(2.4rem, 5.6vw, 4rem); font-weight: 600; margin-top: 1.25rem; margin-bottom: 1.4rem; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2rem; }
+
+.hero-collage {
+  position: relative;
+  margin-top: clamp(3.5rem, 7vw, 5.5rem);
+  padding-right: var(--gutter);
+  /* section bleed: image runs to the right viewport edge */
+  width: 100%;
+  max-width: none;
+  height: clamp(420px, 52vw, 620px);
+}
+.hero-collage-main {
+  position: absolute; inset: 0 0 0 var(--gutter);
+  width: calc(100vw - var(--gutter));
+}
+.hero-collage-main img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius-lg) 0 0 var(--radius-lg); }
+.hero-collage-accent {
+  position: absolute;
+  left: clamp(2rem, 8vw, 6rem);
+  bottom: clamp(-3.5rem, -5vw, -2.5rem);
+  width: clamp(150px, 24vw, 260px);
+  z-index: 2;
+}
+.hero-collage-accent img { aspect-ratio: 4/5; object-fit: cover; box-shadow: var(--shadow-soft); }
+.hero-chip {
+  position: absolute;
+  right: clamp(1rem, 5vw, 4rem);
+  top: clamp(-1.5rem, -3vw, -0.5rem);
+  z-index: 2;
+}
+.hero-chip .tilt { padding: 1.25rem 1.5rem; max-width: 13rem; }
+.chip-num { display: block; font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; color: var(--accent-light); }
+.chip-label { font-size: 0.82rem; color: rgba(248, 244, 239, 0.85); }
+
+/* ===========================================================
+   2. Philosophy
+   =========================================================== */
+.philosophy { padding: clamp(7rem, 11vw, 10rem) 0 clamp(4rem, 7vw, 6rem); position: relative; z-index: 1; }
+.philosophy-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: clamp(2.5rem, 5vw, 4rem); }
+.philosophy-visual { position: relative; margin-right: clamp(-2rem, -4vw, -1rem); }
+.philosophy-visual img { aspect-ratio: 4/4.4; object-fit: cover; }
+
+/* ===========================================================
+   3 & 4. Offering sections (Chiropractic / HBOT)
+   =========================================================== */
+.offering { padding: clamp(4rem, 8vw, 6rem) 0; position: relative; z-index: 1; }
+.offering-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: center; gap: clamp(2.5rem, 5vw, 4.5rem); }
+.offering-reverse .offering-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.offering-reverse .offering-copy { order: 2; }
+.offering-reverse .offering-visual { order: 1; }
+
+.offering-visual { position: relative; }
+.offering-visual > .depth-wrap img { width: 100%; aspect-ratio: 6/7; object-fit: cover; }
+.offering-accent {
+  position: absolute;
+  width: clamp(150px, 20vw, 210px);
+  z-index: 2;
+}
+.offering-accent-1 { right: clamp(-2rem, -5vw, -1rem); bottom: clamp(-2rem, -4vw, -1.25rem); }
+.offering-accent-2 { left: clamp(-2rem, -5vw, -1rem); top: clamp(-1.5rem, -3vw, -1rem); }
+.offering-accent .tilt { padding: 1.1rem 1.25rem; }
+.accent-num { display: block; font-family: var(--font-head); font-weight: 700; font-size: 1.6rem; color: var(--accent-text); }
+.accent-label { font-size: 0.8rem; color: var(--text-soft); }
+
+.offering-points { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.offering-points li { position: relative; padding-left: 1.4rem; font-size: 0.96rem; color: var(--text-soft); }
+.offering-points li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.offering-points strong { color: var(--text); font-weight: 600; }
+
+/* ===========================================================
+   5. Integrated Repair Path
+   =========================================================== */
+.repair-path { padding: clamp(4rem, 8vw, 6rem) 0; position: relative; z-index: 1; }
+.repair-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: clamp(2.5rem, 5vw, 4rem); }
+.repair-copy .lede + .lede { margin-top: 1rem; }
+.repair-visual { position: relative; margin-right: clamp(-2rem, -4vw, -1rem); }
+.repair-visual img { aspect-ratio: 4/4.4; object-fit: cover; }
+
+/* ===========================================================
+   6. Inside the Clinic — irregular 3-image collage
+   =========================================================== */
+.clinic { padding: clamp(5rem, 9vw, 7rem) 0 clamp(6rem, 10vw, 8rem); position: relative; z-index: 1; }
+.clinic-collage {
+  position: relative;
+  max-width: 1500px;
+  margin: clamp(3rem, 6vw, 4.5rem) auto 0;
+  padding: 0 var(--gutter);
+  height: clamp(520px, 60vw, 720px);
+}
+.clinic-img { position: absolute; }
+.clinic-img img { object-fit: cover; }
+.clinic-img-1 { left: 0; top: 0; width: clamp(220px, 34vw, 420px); }
+.clinic-img-1 img { aspect-ratio: 4/5; }
+.clinic-img-2 { right: clamp(0px, 4vw, 40px); top: clamp(2rem, 6vw, 4rem); width: clamp(200px, 30vw, 380px); z-index: 2; }
+.clinic-img-2 img { aspect-ratio: 4/5; }
+.clinic-img-3 { left: clamp(30%, 32vw, 380px); bottom: 0; width: clamp(200px, 28vw, 340px); z-index: 3; }
+.clinic-img-3 img { aspect-ratio: 5/4; }
+
+/* ===========================================================
+   7. Your First Visit
+   =========================================================== */
+.visit { padding: clamp(4rem, 8vw, 6rem) 0; position: relative; z-index: 1; }
+.visit-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: start; gap: clamp(2.5rem, 5vw, 4.5rem); }
+.visit-steps { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.75rem; }
+.visit-steps li { display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start; }
+.step-num { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; color: var(--accent-text); line-height: 1.2; }
+.visit-steps h3 { margin-bottom: 0.4rem; }
+.visit-steps p { font-size: 0.95rem; }
+.visit-visual { position: relative; margin-top: clamp(2rem, 5vw, 3rem); }
+.visit-visual img { aspect-ratio: 4/4.6; object-fit: cover; }
+
+/* ===========================================================
+   8. Restored Bodies
+   =========================================================== */
+.stories { padding: clamp(4rem, 8vw, 6rem) 0 clamp(5rem, 9vw, 7rem); position: relative; z-index: 1; }
+.stories > .container:first-child { margin-bottom: clamp(3rem, 6vw, 4rem); }
+.stories-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 4fr) minmax(0, 3fr);
+  gap: clamp(1.5rem, 3vw, 2.25rem);
+  align-items: start;
+}
+.story-card:nth-of-type(2) { margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+.story-card .tilt { padding: 1.75rem 2rem; }
+.story-card p { font-family: var(--font-serif); font-size: clamp(1.02rem, 1.5vw, 1.15rem); color: var(--text); line-height: 1.5; }
+.story-card cite { display: block; margin-top: 1.1rem; font-style: normal; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--accent-text); }
+.story-image { margin-top: clamp(1.5rem, 4vw, 2.5rem); }
+.story-image img { aspect-ratio: 4/5; object-fit: cover; }
+
+/* ===========================================================
+   9. Book Your Appointment — full-bleed photo backdrop
+   =========================================================== */
+.book { position: relative; padding: clamp(6rem, 11vw, 9rem) 0; z-index: 1; overflow: hidden; }
+.book-bg { position: absolute; inset: 0; z-index: 0; }
+.book-bg img { width: 100%; height: 100%; object-fit: cover; }
+.book-scrim { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(31,46,41,0.35), rgba(31,46,41,0.72)); }
+.book-inner { position: relative; z-index: 1; display: flex; justify-content: center; }
+.book-panel { max-width: 34rem; }
+.book-panel .tilt { padding: clamp(2.25rem, 4vw, 3rem); text-align: center; }
+.book-panel .section-headline { max-width: none; }
+.book-panel .lede { margin-left: auto; margin-right: auto; }
+.book-panel .btn { margin-top: 1.75rem; }
+
+/* ===========================================================
+   10. Contact / Footer
+   =========================================================== */
+.site-footer { padding: clamp(5rem, 9vw, 7rem) 0 clamp(2.5rem, 4vw, 3rem); position: relative; z-index: 1; }
+.footer-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; gap: clamp(2.5rem, 5vw, 4rem); padding-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+.footer-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+.footer-block p { color: var(--text-soft); font-size: 0.92rem; margin-top: 0.4rem; }
+.footer-block a:hover { color: var(--accent-text); }
+.footer-visual { position: relative; margin-right: clamp(-2rem, -4vw, -1rem); }
+.footer-visual img { aspect-ratio: 4/4.6; object-fit: cover; }
+.footer-bottom { padding-top: clamp(1.5rem, 3vw, 2rem); border-top: 1px solid rgba(36, 29, 25, 0.1); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+.footer-bottom p { color: var(--text-soft); font-size: 0.85rem; }
+
+/* ===========================================================
+   Responsive
+   =========================================================== */
+@media (max-width: 900px) {
+  .main-nav { display: none; }
+  .nav-toggle { display: flex; }
+  .btn-header { display: none; }
+  .header-inner { flex-wrap: wrap; }
+  .main-nav.open {
+    display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0;
+    background: rgba(248, 244, 239, 0.97); backdrop-filter: blur(16px);
+    padding: 1.25rem var(--gutter) 1.5rem; gap: 1.1rem; border-bottom: 1px solid rgba(36, 29, 25, 0.08);
+  }
+
+  .hero-collage { height: auto; padding-right: 0; }
+  .hero-collage-main { position: static; width: 100%; height: clamp(280px, 70vw, 420px); }
+  .hero-collage-main img { border-radius: var(--radius-lg); }
+  .hero-collage-accent { position: static; width: 55%; margin: -3rem 0 0 auto; }
+  .hero-chip { position: static; margin-top: 1.5rem; width: fit-content; }
+
+  .philosophy-grid, .offering-grid, .offering-reverse .offering-grid, .repair-grid, .visit-grid, .footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .offering-reverse .offering-copy, .offering-reverse .offering-visual { order: initial; }
+  .philosophy-visual, .repair-visual, .footer-visual { margin-right: 0; order: -1; }
+  .offering-visual { order: -1; margin-bottom: 2rem; }
+  .offering-accent { position: static; width: fit-content; margin-top: -2.5rem; margin-left: auto; margin-right: 1rem; }
+
+  .clinic-collage { height: auto; display: flex; flex-direction: column; gap: 1.75rem; padding: 0 var(--gutter); }
+  .clinic-img { position: static; width: 100% !important; margin: 0 auto; }
+  .clinic-img-3 { margin-top: -2rem; margin-left: 2rem; width: 70% !important; }
+
+  .visit-visual { order: -1; margin-top: 0; margin-bottom: 1rem; }
+
+  .stories-grid { grid-template-columns: 1fr; }
+  .story-card:nth-of-type(2) { margin-top: 0; }
+  .story-image { order: -1; margin-top: 0; max-width: 60%; }
+
+  .footer-details { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .cta-row { flex-direction: column; align-items: stretch; }
+  .cta-row .btn { justify-content: center; }
+  .hero-collage-accent { width: 70%; }
+  .footer-details { grid-template-columns: 1fr; }
+  .story-image { max-width: 100%; }
+}
