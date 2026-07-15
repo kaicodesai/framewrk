@@ -267,7 +267,10 @@ p { max-width: 62ch; color: var(--text-soft); }
 }
 .hero-collage-main {
   position: absolute; inset: 0 0 0 var(--gutter);
-  width: calc(100vw - var(--gutter));
+  /* capped so the box's aspect ratio can't run away on ultra-wide viewports
+     (unbounded width + a height clamped at 620px would eventually crop the
+     illustration's content via object-fit:cover) */
+  width: min(calc(100vw - var(--gutter)), 1700px);
 }
 /* .tilt has no explicit height of its own (it sizes to content everywhere
    else it's used, e.g. glass text cards), so height:100% on the svg below
