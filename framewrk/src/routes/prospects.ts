@@ -1,6 +1,7 @@
 import type { Env, Prospect, Build, Activity, ServiceTier } from "../types";
 import { json, badRequest, notFound } from "../lib/http";
 import { parseGoogleMapsUrl, lookupPlaceDetails } from "../lib/googleMaps";
+import { PRICING_CENTS } from "../lib/pricing";
 
 function newId(): string {
   return crypto.randomUUID();
@@ -186,32 +187,23 @@ export async function updateProspect(request: Request, env: Env, id: string): Pr
         address?: string;
         phone?: string;
         notes?: string;
-        deal_value_cents?: number | null;
       }
     | null;
   if (!body) return badRequest("Request body must be JSON");
 
-  if (
-    body.deal_value_cents !== undefined &&
-    body.deal_value_cents !== null &&
-    !Number.isInteger(body.deal_value_cents)
-  ) {
-    return badRequest("deal_value_cents must be an integer or null");
-  }
-
-  const fields: [string, string | number | null | undefined][] = [
+  // deal_value_cents is deliberately not editable here — fixed pricing means
+  // it's derived from the build's service_tier (see startBuild) and should
+  // never be a manual guess.
+  const fields: [string, string | undefined][] = [
     ["business_name", body.business_name],
     ["category", body.category],
     ["address", body.address],
     ["phone", body.phone],
     ["notes", body.notes],
-    ["deal_value_cents", body.deal_value_cents],
   ];
   const toUpdate = fields.filter(([, value]) => value !== undefined);
   if (toUpdate.length === 0) {
-    return badRequest(
-      "At least one of business_name, category, address, phone, notes, deal_value_cents is required"
-    );
+    return badRequest("At least one of business_name, category, address, phone, notes is required");
   }
 
   const setClause = toUpdate.map(([column]) => `${column} = ?`).join(", ");
@@ -269,9 +261,9 @@ export async function startBuild(request: Request, env: Env, prospectId: string)
     .run();
 
   await env.DB.prepare(
-    "UPDATE prospects SET status = 'building', updated_at = ? WHERE id = ?"
+    "UPDATE prospects SET status = 'building', deal_value_cents = ?, updated_at = ? WHERE id = ?"
   )
-    .bind(timestamp, prospectId)
+    .bind(PRICING_CENTS[serviceTier], timestamp, prospectId)
     .run();
 
   await env.BUILD_QUEUE.send({

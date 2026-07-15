@@ -5,6 +5,7 @@ import Panel from '../components/Panel'
 import Button from '../components/Button'
 import StatusBadge from '../components/StatusBadge'
 import { api } from '../lib/api'
+import { PRICE_LABELS } from '../lib/pricing'
 
 const BUILD_STAGES = [
   { key: 'queued', label: 'Queued' },
@@ -84,10 +85,6 @@ function SubmitPreviewForm({ buildId, onSubmitted }) {
   )
 }
 
-function centsToDollarString(cents) {
-  return cents === null || cents === undefined ? '' : (cents / 100).toFixed(2)
-}
-
 function formatCents(cents) {
   if (cents === null || cents === undefined) return null
   return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
@@ -111,7 +108,6 @@ function BusinessInfoPanel({ prospect, onSaved }) {
     address: prospect.address ?? '',
     phone: prospect.phone ?? '',
     notes: prospect.notes ?? '',
-    deal_value: centsToDollarString(prospect.deal_value_cents),
   })
 
   function startEditing() {
@@ -121,7 +117,6 @@ function BusinessInfoPanel({ prospect, onSaved }) {
       address: prospect.address ?? '',
       phone: prospect.phone ?? '',
       notes: prospect.notes ?? '',
-      deal_value: centsToDollarString(prospect.deal_value_cents),
     })
     setError(null)
     setEditing(true)
@@ -132,12 +127,7 @@ function BusinessInfoPanel({ prospect, onSaved }) {
     setSaving(true)
     setError(null)
     try {
-      const { deal_value, ...rest } = form
-      const deal_value_cents = deal_value.trim() === '' ? null : Math.round(parseFloat(deal_value) * 100)
-      if (deal_value.trim() !== '' && Number.isNaN(deal_value_cents)) {
-        throw new Error('Deal value must be a number')
-      }
-      await api.updateProspect(prospect.id, { ...rest, deal_value_cents })
+      await api.updateProspect(prospect.id, form)
       await onSaved()
       setEditing(false)
     } catch (err) {
@@ -168,17 +158,6 @@ function BusinessInfoPanel({ prospect, onSaved }) {
               />
             </div>
           ))}
-          <div>
-            <label className="text-faint font-mono text-xs block mb-1">deal value ($)</label>
-            <input
-              type="text"
-              inputMode="decimal"
-              value={form.deal_value}
-              onChange={(e) => setForm({ ...form, deal_value: e.target.value })}
-              placeholder="e.g. 450.00"
-              className="w-full bg-surface border border-line px-3 py-2 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
-            />
-          </div>
           <div>
             <label className="text-faint font-mono text-xs block mb-1">notes</label>
             <textarea
@@ -596,7 +575,7 @@ export default function ProspectDetail() {
               disabled={buildingTier !== null}
               onClick={() => handleBuild('website')}
             >
-              {buildingTier === 'website' ? 'Starting…' : 'Build website'}
+              {buildingTier === 'website' ? 'Starting…' : `Build website — ${PRICE_LABELS.website}`}
             </Button>
             <Button
               variant="ghost"
@@ -604,7 +583,9 @@ export default function ProspectDetail() {
               disabled={buildingTier !== null}
               onClick={() => handleBuild('website_dashboard')}
             >
-              {buildingTier === 'website_dashboard' ? 'Starting…' : 'Build website + dashboard'}
+              {buildingTier === 'website_dashboard'
+                ? 'Starting…'
+                : `Build website + dashboard — ${PRICE_LABELS.website_dashboard}`}
             </Button>
           </Panel>
 
