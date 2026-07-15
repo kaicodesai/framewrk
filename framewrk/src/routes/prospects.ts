@@ -106,20 +106,38 @@ export async function getProspect(env: Env, id: string): Promise<Response> {
 
 export async function updateProspect(request: Request, env: Env, id: string): Promise<Response> {
   const body = (await request.json().catch(() => null)) as
-    | { business_name?: string; category?: string; address?: string; phone?: string; notes?: string }
+    | {
+        business_name?: string;
+        category?: string;
+        address?: string;
+        phone?: string;
+        notes?: string;
+        deal_value_cents?: number | null;
+      }
     | null;
   if (!body) return badRequest("Request body must be JSON");
 
-  const fields: [string, string | undefined][] = [
+  if (
+    body.deal_value_cents !== undefined &&
+    body.deal_value_cents !== null &&
+    !Number.isInteger(body.deal_value_cents)
+  ) {
+    return badRequest("deal_value_cents must be an integer or null");
+  }
+
+  const fields: [string, string | number | null | undefined][] = [
     ["business_name", body.business_name],
     ["category", body.category],
     ["address", body.address],
     ["phone", body.phone],
     ["notes", body.notes],
+    ["deal_value_cents", body.deal_value_cents],
   ];
   const toUpdate = fields.filter(([, value]) => value !== undefined);
   if (toUpdate.length === 0) {
-    return badRequest("At least one of business_name, category, address, phone, notes is required");
+    return badRequest(
+      "At least one of business_name, category, address, phone, notes, deal_value_cents is required"
+    );
   }
 
   const setClause = toUpdate.map(([column]) => `${column} = ?`).join(", ");
@@ -139,11 +157,18 @@ export async function updateProspect(request: Request, env: Env, id: string): Pr
   return json(prospect);
 }
 
-export async function markProspectLost(env: Env, id: string): Promise<Response> {
+const LOST_REASONS = ["no_response", "not_interested", "price", "chose_competitor", "other"];
+
+export async function markProspectLost(request: Request, env: Env, id: string): Promise<Response> {
+  const body = (await request.json().catch(() => ({}))) as { reason?: string };
+  if (body.reason !== undefined && !LOST_REASONS.includes(body.reason)) {
+    return badRequest(`reason must be one of: ${LOST_REASONS.join(", ")}`);
+  }
+
   const result = await env.DB.prepare(
-    "UPDATE prospects SET status = 'closed_lost', updated_at = ? WHERE id = ?"
+    "UPDATE prospects SET status = 'closed_lost', lost_reason = ?, updated_at = ? WHERE id = ?"
   )
-    .bind(nowIso(), id)
+    .bind(body.reason ?? null, nowIso(), id)
     .run();
   if (result.meta.changes === 0) return notFound("Prospect not found");
   return json({ ok: true });

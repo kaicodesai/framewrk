@@ -84,6 +84,23 @@ function SubmitPreviewForm({ buildId, onSubmitted }) {
   )
 }
 
+function centsToDollarString(cents) {
+  return cents === null || cents === undefined ? '' : (cents / 100).toFixed(2)
+}
+
+function formatCents(cents) {
+  if (cents === null || cents === undefined) return null
+  return (cents / 100).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+}
+
+const LOST_REASONS = [
+  { key: 'no_response', label: 'No response' },
+  { key: 'not_interested', label: 'Not interested' },
+  { key: 'price', label: 'Price' },
+  { key: 'chose_competitor', label: 'Chose a competitor' },
+  { key: 'other', label: 'Other' },
+]
+
 function BusinessInfoPanel({ prospect, onSaved }) {
   const [editing, setEditing] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -94,6 +111,7 @@ function BusinessInfoPanel({ prospect, onSaved }) {
     address: prospect.address ?? '',
     phone: prospect.phone ?? '',
     notes: prospect.notes ?? '',
+    deal_value: centsToDollarString(prospect.deal_value_cents),
   })
 
   function startEditing() {
@@ -103,6 +121,7 @@ function BusinessInfoPanel({ prospect, onSaved }) {
       address: prospect.address ?? '',
       phone: prospect.phone ?? '',
       notes: prospect.notes ?? '',
+      deal_value: centsToDollarString(prospect.deal_value_cents),
     })
     setError(null)
     setEditing(true)
@@ -113,7 +132,12 @@ function BusinessInfoPanel({ prospect, onSaved }) {
     setSaving(true)
     setError(null)
     try {
-      await api.updateProspect(prospect.id, form)
+      const { deal_value, ...rest } = form
+      const deal_value_cents = deal_value.trim() === '' ? null : Math.round(parseFloat(deal_value) * 100)
+      if (deal_value.trim() !== '' && Number.isNaN(deal_value_cents)) {
+        throw new Error('Deal value must be a number')
+      }
+      await api.updateProspect(prospect.id, { ...rest, deal_value_cents })
       await onSaved()
       setEditing(false)
     } catch (err) {
@@ -144,6 +168,17 @@ function BusinessInfoPanel({ prospect, onSaved }) {
               />
             </div>
           ))}
+          <div>
+            <label className="text-faint font-mono text-xs block mb-1">deal value ($)</label>
+            <input
+              type="text"
+              inputMode="decimal"
+              value={form.deal_value}
+              onChange={(e) => setForm({ ...form, deal_value: e.target.value })}
+              placeholder="e.g. 450.00"
+              className="w-full bg-surface border border-line px-3 py-2 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+            />
+          </div>
           <div>
             <label className="text-faint font-mono text-xs block mb-1">notes</label>
             <textarea
@@ -176,6 +211,18 @@ function BusinessInfoPanel({ prospect, onSaved }) {
         </Button>
       </div>
       <dl className="space-y-3 text-sm">
+        <div>
+          <dt className="text-faint font-mono text-xs">deal value</dt>
+          <dd className="text-ink">{formatCents(prospect.deal_value_cents) || '—'}</dd>
+        </div>
+        {prospect.status === 'closed_lost' && prospect.lost_reason && (
+          <div>
+            <dt className="text-faint font-mono text-xs">lost reason</dt>
+            <dd className="text-danger">
+              {LOST_REASONS.find((r) => r.key === prospect.lost_reason)?.label ?? prospect.lost_reason}
+            </dd>
+          </div>
+        )}
         <div>
           <dt className="text-faint font-mono text-xs">category</dt>
           <dd className="text-ink">{prospect.category || '—'}</dd>
@@ -311,6 +358,58 @@ function ActivityLog({ prospectId, activities, onLogged }) {
           ))}
         </div>
       )}
+    </Panel>
+  )
+}
+
+function MarkLostControl({ onConfirm }) {
+  const [open, setOpen] = useState(false)
+  const [reason, setReason] = useState(LOST_REASONS[0].key)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState(null)
+
+  async function handleConfirm() {
+    setSubmitting(true)
+    setError(null)
+    try {
+      await onConfirm(reason)
+    } catch (err) {
+      setError(err.message)
+      setSubmitting(false)
+    }
+  }
+
+  if (!open) {
+    return (
+      <Button variant="danger" className="w-full" onClick={() => setOpen(true)}>
+        Mark as lost
+      </Button>
+    )
+  }
+
+  return (
+    <Panel className="p-4 space-y-3">
+      <label className="text-faint font-mono text-xs block">why did this one fall through?</label>
+      <select
+        value={reason}
+        onChange={(e) => setReason(e.target.value)}
+        className="w-full bg-surface border border-line px-3 py-2 font-mono text-sm text-ink focus:outline-none focus:border-acid"
+      >
+        {LOST_REASONS.map((r) => (
+          <option key={r.key} value={r.key}>
+            {r.label}
+          </option>
+        ))}
+      </select>
+      {error && <div className="text-xs text-danger font-mono">{error}</div>}
+      <div className="flex gap-2">
+        <Button variant="danger" disabled={submitting} onClick={handleConfirm}>
+          {submitting ? 'Marking…' : 'Confirm — mark lost'}
+        </Button>
+        <Button variant="ghost" disabled={submitting} onClick={() => setOpen(false)}>
+          Cancel
+        </Button>
+      </div>
     </Panel>
   )
 }
@@ -455,13 +554,9 @@ export default function ProspectDetail() {
     }
   }
 
-  async function handleMarkLost() {
-    try {
-      await api.markProspectLost(id)
-      navigate('/')
-    } catch (err) {
-      setError(err.message)
-    }
+  async function handleMarkLost(reason) {
+    await api.markProspectLost(id, reason)
+    navigate('/')
   }
 
   if (error && !prospect) {
@@ -513,9 +608,7 @@ export default function ProspectDetail() {
             </Button>
           </Panel>
 
-          <Button variant="danger" className="w-full" onClick={handleMarkLost}>
-            Mark as lost
-          </Button>
+          {prospect.status !== 'closed_lost' && <MarkLostControl onConfirm={handleMarkLost} />}
         </div>
 
         <div className="md:col-span-2">

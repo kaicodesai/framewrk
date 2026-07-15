@@ -53,7 +53,11 @@ export const api = {
       method: 'PATCH',
       body: JSON.stringify(fields),
     }),
-  markProspectLost: (id) => request(`/prospects/${id}/mark-lost`, { method: 'POST' }),
+  markProspectLost: (id, reason) =>
+    request(`/prospects/${id}/mark-lost`, {
+      method: 'POST',
+      body: JSON.stringify({ reason }),
+    }),
   startBuild: (id, serviceTier) =>
     request(`/prospects/${id}/build`, {
       method: 'POST',

@@ -71,6 +71,12 @@ export interface Prospect {
   instagram_url: string | null;
   notes: string | null;
   status: ProspectStatus;
+  // Categorical reason captured on markProspectLost — freeform detail still
+  // belongs in `notes`, this stays a short fixed set for reportable metrics.
+  lost_reason: string | null;
+  // Manually-tracked deal value in cents — not wired to Stripe yet, but
+  // lets win-rate/revenue metrics be answerable ahead of that integration.
+  deal_value_cents: number | null;
   created_at: string;
   updated_at: string;
 }

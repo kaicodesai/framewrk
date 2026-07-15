@@ -48,7 +48,7 @@ async function route(request: Request, env: Env): Promise<Response> {
 
   const lostMatch = pathname.match(/^\/prospects\/([^/]+)\/mark-lost$/);
   if (lostMatch && method === "POST") {
-    return markProspectLost(env, lostMatch[1]);
+    return markProspectLost(request, env, lostMatch[1]);
   }
 
   const buildMatch = pathname.match(/^\/prospects\/([^/]+)\/build$/);
