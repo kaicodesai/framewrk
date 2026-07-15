@@ -6,6 +6,41 @@ import Button from '../components/Button'
 import StatTile from '../components/StatTile'
 import StatusBadge from '../components/StatusBadge'
 import { api } from '../lib/api'
+import { statusInfo } from '../lib/status'
+
+const PROSPECT_STATUSES = [
+  'submitted',
+  'building',
+  'qa_pass',
+  'qa_fail',
+  'outreach_ready',
+  'sent',
+  'interested',
+  'paid',
+  'handed_off',
+  'closed_lost',
+]
+
+const SORT_OPTIONS = [
+  { key: 'newest', label: 'Newest' },
+  { key: 'oldest', label: 'Oldest' },
+  { key: 'recently_updated', label: 'Recently updated' },
+  { key: 'name', label: 'Name A–Z' },
+]
+
+function sortProspects(prospects, sortBy) {
+  const sorted = [...prospects]
+  if (sortBy === 'oldest') {
+    sorted.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+  } else if (sortBy === 'recently_updated') {
+    sorted.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+  } else if (sortBy === 'name') {
+    sorted.sort((a, b) => (a.business_name || '').localeCompare(b.business_name || ''))
+  } else {
+    sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+  }
+  return sorted
+}
 
 export default function Pipeline() {
   const [prospects, setProspects] = useState([])
@@ -18,6 +53,10 @@ export default function Pipeline() {
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [formError, setFormError] = useState(null)
+
+  const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('all')
+  const [sortBy, setSortBy] = useState('newest')
 
   async function load() {
     setLoading(true)
@@ -69,6 +108,18 @@ export default function Pipeline() {
       return acc
     },
     { total: 0, building: 0, ready: 0, paid: 0 }
+  )
+
+  const searchLower = search.trim().toLowerCase()
+  const visibleProspects = sortProspects(
+    prospects.filter((p) => {
+      if (statusFilter !== 'all' && p.status !== statusFilter) return false
+      if (!searchLower) return true
+      return [p.business_name, p.category, p.address]
+        .filter(Boolean)
+        .some((field) => field.toLowerCase().includes(searchLower))
+    }),
+    sortBy
   )
 
   return (
@@ -138,7 +189,41 @@ export default function Pipeline() {
         </form>
       </Panel>
 
-      <div className="label-caps mb-4">All prospects</div>
+      <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
+        <div className="label-caps">All prospects</div>
+        <div className="flex items-center gap-2 flex-wrap">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="search name, category, address…"
+            className="bg-surface border border-line px-3 py-2 font-mono text-xs text-ink placeholder:text-faint focus:outline-none focus:border-acid w-56"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-surface border border-line px-3 py-2 font-mono text-xs text-ink focus:outline-none focus:border-acid"
+          >
+            <option value="all">All statuses</option>
+            {PROSPECT_STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {statusInfo(s).label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="bg-surface border border-line px-3 py-2 font-mono text-xs text-ink focus:outline-none focus:border-acid"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.key} value={o.key}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {loading && <div className="font-mono text-sm text-muted">loading…</div>}
       {error && <div className="font-mono text-sm text-danger">{error}</div>}
@@ -149,9 +234,15 @@ export default function Pipeline() {
         </div>
       )}
 
-      {!loading && prospects.length > 0 && (
+      {!loading && prospects.length > 0 && visibleProspects.length === 0 && (
+        <div className="font-mono text-sm text-muted border border-line p-6">
+          No prospects match your search/filter.
+        </div>
+      )}
+
+      {!loading && visibleProspects.length > 0 && (
         <div className="border border-line">
-          {prospects.map((p) => (
+          {visibleProspects.map((p) => (
             <Link
               key={p.id}
               to={`/prospects/${p.id}`}
