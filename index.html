@@ -40,6 +40,26 @@
     <filter id="iconShadow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="10"/>
     </filter>
+    <!-- abstract-art palette: soft mesh-gradient blobs used across every
+         illustration instead of literal iconography -->
+    <radialGradient id="glowDeep" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2C8C7C" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#2C8C7C" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowCream" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F8F4EF" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#F8F4EF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowMoss" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#164F45" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#164F45" stop-opacity="0"/>
+    </radialGradient>
+    <!-- fine tactile grain, layered at very low opacity over every
+         illustration so soft gradients don't read as flat/plastic -->
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.05 0"/>
+    </filter>
   </defs>
 </svg>
 
@@ -88,72 +108,51 @@
     <div class="hero-collage" data-reveal>
       <div class="depth-wrap hero-collage-main" data-parallax="0.04" data-depth>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 2000 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a spine with a practitioner's hand guiding a gentle adjustment">
+          <svg class="illustration" viewBox="0 0 2000 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition in the practice's warm, restorative palette">
             <!-- viewBox is wide/landscape (2.5:1) to match how this box actually
-                 renders on real screens (roughly 1.9:1-3:1); artwork stays within
-                 a safe vertical margin so object-fit:cover cropping never slices
-                 through the spine or hand the way a tall 1.4:1 viewBox did before -->
+                 renders on real screens (roughly 1.9:1-3:1) so object-fit:cover
+                 cropping never runs into shape edges -->
             <rect width="2000" height="800" fill="url(#gradWarm)"/>
-            <circle cx="1650" cy="150" r="280" fill="url(#glowMint)"/>
-            <circle cx="280" cy="650" r="240" fill="url(#glowClay)"/>
-            <g transform="translate(1508,122)" fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
-              <path d="M45 0 C75 33 15 60 45 93 C15 126 75 153 45 186 C75 219 15 246 45 279 C15 312 75 339 45 372 C75 405 15 432 45 465 C15 498 75 525 45 558"/>
-              <ellipse cx="45" cy="46" rx="27" ry="15"/>
-              <ellipse cx="45" cy="140" rx="27" ry="15"/>
-              <ellipse cx="45" cy="232" rx="27" ry="15"/>
-              <ellipse cx="45" cy="326" rx="27" ry="15"/>
-              <ellipse cx="45" cy="418" rx="27" ry="15"/>
-              <ellipse cx="45" cy="512" rx="27" ry="15"/>
+            <circle cx="1600" cy="140" r="440" fill="url(#glowMint)"/>
+            <circle cx="1780" cy="560" r="320" fill="url(#glowDeep)" opacity="0.55"/>
+            <circle cx="260" cy="640" r="400" fill="url(#glowClay)"/>
+            <circle cx="620" cy="180" r="280" fill="url(#glowCream)" opacity="0.7"/>
+            <circle cx="1020" cy="620" r="300" fill="url(#glowMoss)" opacity="0.5"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.45">
+              <path d="M-40 520 C 380 440, 760 590, 1160 470 S 1900 380, 2040 420" stroke-width="4"/>
+              <path d="M-40 260 C 400 340, 780 190, 1180 300 S 1880 250, 2040 220" stroke-width="3" opacity="0.7"/>
             </g>
-            <g transform="translate(1500,110)" fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M45 0 C75 33 15 60 45 93 C15 126 75 153 45 186 C75 219 15 246 45 279 C15 312 75 339 45 372 C75 405 15 432 45 465 C15 498 75 525 45 558"/>
-              <ellipse cx="45" cy="46" rx="27" ry="15"/>
-              <ellipse cx="45" cy="140" rx="27" ry="15"/>
-              <ellipse cx="45" cy="232" rx="27" ry="15"/>
-              <ellipse cx="45" cy="326" rx="27" ry="15"/>
-              <ellipse cx="45" cy="418" rx="27" ry="15"/>
-              <ellipse cx="45" cy="512" rx="27" ry="15"/>
+            <g fill="#1D6357">
+              <circle cx="1460" cy="230" r="9" opacity="0.5"/>
+              <circle cx="1540" cy="300" r="6" opacity="0.4"/>
+              <circle cx="1610" cy="200" r="12" opacity="0.4"/>
+              <circle cx="1700" cy="330" r="7" opacity="0.5"/>
+              <circle cx="380" cy="540" r="10" opacity="0.4"/>
+              <circle cx="460" cy="610" r="6" opacity="0.5"/>
+              <circle cx="330" cy="470" r="8" opacity="0.35"/>
             </g>
-            <g transform="translate(528,262) scale(2.1)" fill="none" stroke="#0F0B08" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.25" filter="url(#iconShadow)">
-              <rect x="55" y="145" width="130" height="65" rx="32"/>
-              <rect x="67" y="67" width="16" height="78" rx="8"/>
-              <rect x="93" y="53" width="16" height="92" rx="8"/>
-              <rect x="119" y="57" width="16" height="88" rx="8"/>
-              <rect x="145" y="77" width="16" height="68" rx="8"/>
-              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
-            </g>
-            <g transform="translate(520,250) scale(2.1)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
-              <rect x="55" y="145" width="130" height="65" rx="32"/>
-              <rect x="67" y="67" width="16" height="78" rx="8"/>
-              <rect x="93" y="53" width="16" height="92" rx="8"/>
-              <rect x="119" y="57" width="16" height="88" rx="8"/>
-              <rect x="145" y="77" width="16" height="68" rx="8"/>
-              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
-            </g>
+            <rect width="2000" height="800" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
       <div class="float-wrap hero-collage-accent" data-parallax="0.09" data-depth>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 900 1100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a soft-shell hyperbaric oxygen chamber">
+          <svg class="illustration" viewBox="0 0 900 1100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition echoing the hyperbaric chamber's calm">
             <rect width="900" height="1100" fill="url(#gradSage)"/>
-            <circle cx="740" cy="220" r="240" fill="url(#glowMint)"/>
-            <circle cx="120" cy="920" r="180" fill="url(#glowClay)"/>
-            <g transform="translate(158,272)" fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" opacity="0.3" filter="url(#iconShadow)">
-              <rect x="0" y="0" width="600" height="560" rx="280"/>
+            <circle cx="740" cy="220" r="320" fill="url(#glowMint)"/>
+            <circle cx="220" cy="900" r="280" fill="url(#glowClay)"/>
+            <circle cx="480" cy="560" r="260" fill="url(#glowDeep)" opacity="0.5"/>
+            <circle cx="700" cy="820" r="200" fill="url(#glowCream)" opacity="0.6"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M60 380 C 260 460, 380 300, 620 400 S 860 340, 900 380" stroke-width="3"/>
             </g>
-            <g transform="translate(150,260)" fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round">
-              <rect x="0" y="0" width="600" height="560" rx="280"/>
-              <path d="M120 280 a180 180 0 1 0 360 0" opacity="0.55"/>
-              <path d="M170 280 a130 130 0 1 0 260 0" opacity="0.4"/>
+            <g fill="#1D6357" opacity="0.45">
+              <circle cx="330" cy="720" r="8"/>
+              <circle cx="420" cy="780" r="6"/>
+              <circle cx="560" cy="740" r="10"/>
+              <circle cx="650" cy="800" r="5"/>
             </g>
-            <g fill="#1D6357" opacity="0.55">
-              <circle cx="270" cy="640" r="10"/>
-              <circle cx="330" cy="690" r="7"/>
-              <circle cx="400" cy="650" r="12"/>
-              <circle cx="470" cy="700" r="6"/>
-              <circle cx="540" cy="655" r="9"/>
-            </g>
+            <rect width="900" height="1100" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
@@ -176,26 +175,22 @@
       </div>
       <div class="float-wrap philosophy-visual" data-parallax="0.06" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 900 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of an open hand, palm resting calmly">
+          <svg class="illustration" viewBox="0 0 900 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition evoking a calm, grounded touch">
             <rect width="900" height="1000" fill="url(#gradWarm)"/>
-            <circle cx="700" cy="200" r="230" fill="url(#glowMint)"/>
-            <circle cx="150" cy="800" r="200" fill="url(#glowClay)"/>
-            <g transform="translate(312,354) scale(2.15)" fill="none" stroke="#164F45" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
-              <rect x="55" y="145" width="130" height="65" rx="32"/>
-              <rect x="67" y="67" width="16" height="78" rx="8"/>
-              <rect x="93" y="53" width="16" height="92" rx="8"/>
-              <rect x="119" y="57" width="16" height="88" rx="8"/>
-              <rect x="145" y="77" width="16" height="68" rx="8"/>
-              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
+            <circle cx="700" cy="220" r="360" fill="url(#glowMint)"/>
+            <circle cx="180" cy="820" r="320" fill="url(#glowClay)"/>
+            <circle cx="480" cy="560" r="240" fill="url(#glowDeep)" opacity="0.5"/>
+            <circle cx="620" cy="800" r="200" fill="url(#glowCream)" opacity="0.6"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M-20 480 C 220 420, 380 560, 620 460 S 880 400, 920 440" stroke-width="3"/>
             </g>
-            <g transform="translate(300,340) scale(2.15)" fill="none" stroke="url(#strokeDeep)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="55" y="145" width="130" height="65" rx="32"/>
-              <rect x="67" y="67" width="16" height="78" rx="8"/>
-              <rect x="93" y="53" width="16" height="92" rx="8"/>
-              <rect x="119" y="57" width="16" height="88" rx="8"/>
-              <rect x="145" y="77" width="16" height="68" rx="8"/>
-              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
+            <g fill="#1D6357" opacity="0.45">
+              <circle cx="260" cy="620" r="9"/>
+              <circle cx="340" cy="680" r="6"/>
+              <circle cx="600" cy="300" r="8"/>
+              <circle cx="670" cy="360" r="5"/>
             </g>
+            <rect width="900" height="1000" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
@@ -208,50 +203,24 @@
       <div class="offering-visual" data-parallax="0.05" data-depth data-reveal>
         <div class="depth-wrap">
           <div class="tilt" data-tilt>
-            <svg class="illustration" viewBox="0 0 1200 1400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a spine with a hand guiding a precise adjustment">
+            <svg class="illustration" viewBox="0 0 1200 1400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition in warm, grounded tones">
               <rect width="1200" height="1400" fill="url(#gradWarm)"/>
-              <circle cx="950" cy="260" r="320" fill="url(#glowMint)"/>
-              <circle cx="180" cy="1180" r="260" fill="url(#glowClay)"/>
-              <g transform="translate(508,162)" fill="none" stroke="#164F45" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
-                <path d="M60 0 C104 38 16 72 60 110 C16 148 104 182 60 220 C104 258 16 292 60 330 C16 368 104 402 60 440 C104 478 16 512 60 550 C16 588 104 622 60 660 C104 698 16 732 60 770 C16 808 104 842 60 880 C104 918 16 952 60 990"/>
-                <ellipse cx="60" cy="55" rx="33" ry="18"/>
-                <ellipse cx="60" cy="165" rx="33" ry="18"/>
-                <ellipse cx="60" cy="275" rx="33" ry="18"/>
-                <ellipse cx="60" cy="385" rx="33" ry="18"/>
-                <ellipse cx="60" cy="495" rx="33" ry="18"/>
-                <ellipse cx="60" cy="605" rx="33" ry="18"/>
-                <ellipse cx="60" cy="715" rx="33" ry="18"/>
-                <ellipse cx="60" cy="825" rx="33" ry="18"/>
-                <ellipse cx="60" cy="935" rx="33" ry="18"/>
+              <circle cx="950" cy="280" r="440" fill="url(#glowMint)"/>
+              <circle cx="220" cy="1180" r="420" fill="url(#glowClay)"/>
+              <circle cx="700" cy="900" r="320" fill="url(#glowDeep)" opacity="0.5"/>
+              <circle cx="350" cy="400" r="260" fill="url(#glowCream)" opacity="0.65"/>
+              <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+                <path d="M-40 700 C 260 620, 440 820, 740 680 S 1180 560, 1240 620" stroke-width="4"/>
+                <path d="M-40 980 C 300 1040, 520 880, 800 960 S 1160 900, 1240 940" stroke-width="3" opacity="0.7"/>
               </g>
-              <g transform="translate(500,150)" fill="none" stroke="url(#strokeDeep)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M60 0 C104 38 16 72 60 110 C16 148 104 182 60 220 C104 258 16 292 60 330 C16 368 104 402 60 440 C104 478 16 512 60 550 C16 588 104 622 60 660 C104 698 16 732 60 770 C16 808 104 842 60 880 C104 918 16 952 60 990"/>
-                <ellipse cx="60" cy="55" rx="33" ry="18"/>
-                <ellipse cx="60" cy="165" rx="33" ry="18"/>
-                <ellipse cx="60" cy="275" rx="33" ry="18"/>
-                <ellipse cx="60" cy="385" rx="33" ry="18"/>
-                <ellipse cx="60" cy="495" rx="33" ry="18"/>
-                <ellipse cx="60" cy="605" rx="33" ry="18"/>
-                <ellipse cx="60" cy="715" rx="33" ry="18"/>
-                <ellipse cx="60" cy="825" rx="33" ry="18"/>
-                <ellipse cx="60" cy="935" rx="33" ry="18"/>
+              <g fill="#1D6357">
+                <circle cx="880" cy="470" r="9" opacity="0.45"/>
+                <circle cx="960" cy="540" r="6" opacity="0.4"/>
+                <circle cx="820" cy="580" r="11" opacity="0.4"/>
+                <circle cx="300" cy="960" r="8" opacity="0.4"/>
+                <circle cx="380" cy="1030" r="6" opacity="0.5"/>
               </g>
-              <g transform="translate(238,728) scale(1.65)" fill="none" stroke="#0F0B08" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.25" filter="url(#iconShadow)">
-                <rect x="55" y="145" width="130" height="65" rx="32"/>
-                <rect x="67" y="67" width="16" height="78" rx="8"/>
-                <rect x="93" y="53" width="16" height="92" rx="8"/>
-                <rect x="119" y="57" width="16" height="88" rx="8"/>
-                <rect x="145" y="77" width="16" height="68" rx="8"/>
-                <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
-              </g>
-              <g transform="translate(230,720) scale(1.65)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
-                <rect x="55" y="145" width="130" height="65" rx="32"/>
-                <rect x="67" y="67" width="16" height="78" rx="8"/>
-                <rect x="93" y="53" width="16" height="92" rx="8"/>
-                <rect x="119" y="57" width="16" height="88" rx="8"/>
-                <rect x="145" y="77" width="16" height="68" rx="8"/>
-                <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
-              </g>
+              <rect width="1200" height="1400" filter="url(#grain)"/>
             </svg>
           </div>
         </div>
@@ -293,25 +262,23 @@
       <div class="offering-visual" data-parallax="0.05" data-depth data-reveal>
         <div class="depth-wrap">
           <div class="tilt" data-tilt>
-            <svg class="illustration" viewBox="0 0 1200 1400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a soft-shell monoplace hyperbaric chamber with pressure rings and rising oxygen bubbles">
+            <svg class="illustration" viewBox="0 0 1200 1400" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition evoking pressurized calm">
               <rect width="1200" height="1400" fill="url(#gradSage)"/>
-              <circle cx="950" cy="280" r="320" fill="url(#glowMint)"/>
-              <circle cx="200" cy="1180" r="260" fill="url(#glowClay)"/>
-              <g transform="translate(220,354)" fill="none" stroke="#164F45" stroke-width="10" stroke-linecap="round" opacity="0.3" filter="url(#iconShadow)">
-                <rect x="0" y="0" width="780" height="680" rx="340"/>
+              <circle cx="950" cy="300" r="440" fill="url(#glowMint)"/>
+              <circle cx="240" cy="1160" r="380" fill="url(#glowClay)"/>
+              <circle cx="600" cy="820" r="340" fill="url(#glowDeep)" opacity="0.5"/>
+              <circle cx="850" cy="1100" r="240" fill="url(#glowCream)" opacity="0.6"/>
+              <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+                <path d="M-40 560 C 260 640, 480 460, 760 560 S 1140 500, 1240 540" stroke-width="4"/>
               </g>
-              <g transform="translate(210,340)" fill="none" stroke="url(#strokeDeep)" stroke-width="10" stroke-linecap="round">
-                <rect x="0" y="0" width="780" height="680" rx="340"/>
-                <path d="M150 340 a240 240 0 1 0 480 0" opacity="0.55"/>
-                <path d="M220 340 a170 170 0 1 0 340 0" opacity="0.4"/>
-              </g>
-              <g fill="#1D6357" opacity="0.55">
+              <g fill="#1D6357" opacity="0.5">
                 <circle cx="360" cy="1120" r="14"/>
                 <circle cx="440" cy="1180" r="9"/>
                 <circle cx="540" cy="1110" r="16"/>
                 <circle cx="640" cy="1190" r="8"/>
                 <circle cx="740" cy="1120" r="12"/>
               </g>
+              <rect width="1200" height="1400" filter="url(#grain)"/>
             </svg>
           </div>
         </div>
@@ -336,44 +303,29 @@
       </div>
       <div class="float-wrap repair-visual" data-parallax="0.07" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 900 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a spine intertwined with orbiting oxygen particles">
+          <svg class="illustration" viewBox="0 0 900 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition suggesting two systems working as one">
             <rect width="900" height="1000" fill="url(#gradSage)"/>
-            <circle cx="720" cy="220" r="240" fill="url(#glowMint)"/>
-            <circle cx="150" cy="820" r="200" fill="url(#glowClay)"/>
-            <g transform="translate(388,122)" fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
-              <path d="M50 0 C82 28 18 53 50 81 C18 109 82 134 50 162 C82 190 18 215 50 243 C18 271 82 296 50 324 C82 352 18 377 50 405 C18 433 82 458 50 486 C82 514 18 539 50 567 C18 595 82 620 50 648"/>
-              <ellipse cx="50" cy="40" rx="26" ry="15"/>
-              <ellipse cx="50" cy="122" rx="26" ry="15"/>
-              <ellipse cx="50" cy="202" rx="26" ry="15"/>
-              <ellipse cx="50" cy="284" rx="26" ry="15"/>
-              <ellipse cx="50" cy="364" rx="26" ry="15"/>
-              <ellipse cx="50" cy="446" rx="26" ry="15"/>
-              <ellipse cx="50" cy="526" rx="26" ry="15"/>
-              <ellipse cx="50" cy="608" rx="26" ry="15"/>
+            <circle cx="720" cy="240" r="360" fill="url(#glowMint)"/>
+            <circle cx="180" cy="800" r="320" fill="url(#glowClay)"/>
+            <circle cx="460" cy="540" r="260" fill="url(#glowDeep)" opacity="0.5"/>
+            <circle cx="600" cy="800" r="200" fill="url(#glowCream)" opacity="0.55"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M-20 460 C 220 400, 380 540, 620 440 S 880 380, 920 420" stroke-width="3"/>
+              <path d="M-20 620 C 240 680, 400 560, 660 640 S 880 600, 920 630" stroke-width="2" opacity="0.6"/>
             </g>
-            <g transform="translate(380,110)" fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M50 0 C82 28 18 53 50 81 C18 109 82 134 50 162 C82 190 18 215 50 243 C18 271 82 296 50 324 C82 352 18 377 50 405 C18 433 82 458 50 486 C82 514 18 539 50 567 C18 595 82 620 50 648"/>
-              <ellipse cx="50" cy="40" rx="26" ry="15"/>
-              <ellipse cx="50" cy="122" rx="26" ry="15"/>
-              <ellipse cx="50" cy="202" rx="26" ry="15"/>
-              <ellipse cx="50" cy="284" rx="26" ry="15"/>
-              <ellipse cx="50" cy="364" rx="26" ry="15"/>
-              <ellipse cx="50" cy="446" rx="26" ry="15"/>
-              <ellipse cx="50" cy="526" rx="26" ry="15"/>
-              <ellipse cx="50" cy="608" rx="26" ry="15"/>
-            </g>
-            <g fill="none" stroke="#2C8C7C" stroke-width="3" opacity="0.6">
+            <g fill="none" stroke="#2C8C7C" stroke-width="3" opacity="0.5">
               <circle cx="230" cy="300" r="110"/>
               <circle cx="650" cy="560" r="90"/>
             </g>
             <g fill="#1D6357">
-              <circle cx="230" cy="190" r="10"/>
-              <circle cx="320" cy="330" r="7"/>
-              <circle cx="150" cy="380" r="8"/>
-              <circle cx="650" cy="470" r="9"/>
-              <circle cx="720" cy="600" r="6"/>
-              <circle cx="580" cy="640" r="8"/>
+              <circle cx="230" cy="190" r="10" opacity="0.5"/>
+              <circle cx="320" cy="330" r="7" opacity="0.45"/>
+              <circle cx="150" cy="380" r="8" opacity="0.4"/>
+              <circle cx="650" cy="470" r="9" opacity="0.45"/>
+              <circle cx="720" cy="600" r="6" opacity="0.4"/>
+              <circle cx="580" cy="640" r="8" opacity="0.4"/>
             </g>
+            <rect width="900" height="1000" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
@@ -389,84 +341,55 @@
     <div class="clinic-collage">
       <div class="float-wrap clinic-img clinic-img-1" data-parallax="0.05" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of an adjustment table in a sunlit room">
+          <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition in warm, sunlit tones">
             <rect width="1000" height="1200" fill="url(#gradWarm)"/>
-            <circle cx="800" cy="220" r="260" fill="url(#glowMint)"/>
-            <g fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
-              <rect x="180" y="560" width="640" height="130" rx="40"/>
-              <rect x="230" y="480" width="220" height="90" rx="34"/>
-              <path d="M240 690 L240 810"/>
-              <path d="M760 690 L760 810"/>
-              <path d="M240 810 L200 810"/>
-              <path d="M760 810 L800 810"/>
+            <circle cx="780" cy="260" r="380" fill="url(#glowMint)"/>
+            <circle cx="220" cy="960" r="360" fill="url(#glowClay)"/>
+            <circle cx="500" cy="620" r="280" fill="url(#glowCream)" opacity="0.6"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M-20 500 C 220 440, 380 580, 620 480 S 980 420, 1020 460" stroke-width="3"/>
             </g>
-            <g fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="180" y="560" width="640" height="130" rx="40"/>
-              <rect x="230" y="480" width="220" height="90" rx="34"/>
-              <path d="M240 690 L240 810"/>
-              <path d="M760 690 L760 810"/>
-              <path d="M240 810 L200 810"/>
-              <path d="M760 810 L800 810"/>
-            </g>
-            <g stroke="#C9A47C" stroke-width="4" opacity="0.5">
+            <g stroke="#C9A47C" stroke-width="4" opacity="0.4">
               <path d="M120 120 L340 380"/>
               <path d="M170 120 L390 380"/>
               <path d="M220 120 L440 380"/>
             </g>
+            <rect width="1000" height="1200" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
       <div class="float-wrap clinic-img clinic-img-2" data-parallax="0.09" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a hyperbaric chamber room porthole with soft ambient light">
+          <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition evoking soft ambient chamber light">
             <rect width="1000" height="1200" fill="url(#gradSage)"/>
-            <circle cx="220" cy="900" r="260" fill="url(#glowClay)"/>
-            <g fill="none" stroke="#164F45" stroke-width="10" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
-              <circle cx="500" cy="480" r="280"/>
-            </g>
-            <g fill="none" stroke="url(#strokeDeep)" stroke-width="10">
-              <circle cx="500" cy="480" r="280"/>
-              <circle cx="500" cy="480" r="210" opacity="0.6"/>
-              <circle cx="500" cy="480" r="140" opacity="0.4"/>
-            </g>
+            <circle cx="500" cy="480" r="420" fill="url(#glowMint)"/>
+            <circle cx="220" cy="900" r="360" fill="url(#glowClay)"/>
+            <circle cx="640" cy="820" r="260" fill="url(#glowDeep)" opacity="0.5"/>
             <g fill="#1D6357" opacity="0.5">
               <circle cx="330" cy="860" r="12"/>
               <circle cx="420" cy="920" r="8"/>
               <circle cx="540" cy="880" r="14"/>
               <circle cx="640" cy="930" r="7"/>
             </g>
+            <rect width="1000" height="1200" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
       <div class="float-wrap clinic-img clinic-img-3" data-parallax="0.06" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a hand adjusting a treatment table strap">
+          <svg class="illustration" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition in warm, attentive tones">
             <rect width="1000" height="800" fill="url(#gradWarm)"/>
-            <circle cx="180" cy="150" r="200" fill="url(#glowMint)"/>
-            <g fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
-              <rect x="470" y="330" width="300" height="66" rx="20"/>
-              <rect x="560" y="316" width="90" height="94" rx="16"/>
+            <circle cx="220" cy="180" r="320" fill="url(#glowMint)"/>
+            <circle cx="780" cy="620" r="300" fill="url(#glowClay)"/>
+            <circle cx="500" cy="400" r="220" fill="url(#glowCream)" opacity="0.6"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M-20 300 C 220 250, 380 380, 620 300 S 940 240, 1020 280" stroke-width="3"/>
             </g>
-            <g fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="470" y="330" width="300" height="66" rx="20"/>
-              <rect x="560" y="316" width="90" height="94" rx="16"/>
+            <g fill="#1D6357" opacity="0.4">
+              <circle cx="620" cy="240" r="7"/>
+              <circle cx="700" cy="180" r="5"/>
             </g>
-            <g transform="translate(268,442) scale(1.5)" fill="none" stroke="#0F0B08" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.25" filter="url(#iconShadow)">
-              <rect x="55" y="145" width="130" height="65" rx="32"/>
-              <rect x="67" y="67" width="16" height="78" rx="8"/>
-              <rect x="93" y="53" width="16" height="92" rx="8"/>
-              <rect x="119" y="57" width="16" height="88" rx="8"/>
-              <rect x="145" y="77" width="16" height="68" rx="8"/>
-              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
-            </g>
-            <g transform="translate(260,430) scale(1.5)" fill="none" stroke="#241D19" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.88">
-              <rect x="55" y="145" width="130" height="65" rx="32"/>
-              <rect x="67" y="67" width="16" height="78" rx="8"/>
-              <rect x="93" y="53" width="16" height="92" rx="8"/>
-              <rect x="119" y="57" width="16" height="88" rx="8"/>
-              <rect x="145" y="77" width="16" height="68" rx="8"/>
-              <rect x="0" y="0" width="20" height="62" rx="10" transform="translate(38,178) rotate(-40)"/>
-            </g>
+            <rect width="1000" height="800" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
@@ -496,26 +419,20 @@
       </div>
       <div class="float-wrap visit-visual" data-parallax="0.05" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a cozy armchair beside a plant, evoking a welcoming reception area">
+          <svg class="illustration" viewBox="0 0 1000 1200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition evoking a warm, welcoming space">
             <rect width="1000" height="1200" fill="url(#gradWarm)"/>
-            <circle cx="780" cy="240" r="260" fill="url(#glowMint)"/>
-            <g fill="none" stroke="#164F45" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
-              <path d="M280 620 L280 900 Q280 950 330 950 L620 950 Q670 950 670 900 L670 620"/>
-              <path d="M240 640 Q240 560 320 560 L630 560 Q710 560 710 640 L710 760 Q710 800 670 800 L280 800 Q240 800 240 760 Z"/>
-              <path d="M280 950 L260 1020"/>
-              <path d="M670 950 L690 1020"/>
+            <circle cx="780" cy="280" r="380" fill="url(#glowMint)"/>
+            <circle cx="220" cy="960" r="360" fill="url(#glowClay)"/>
+            <circle cx="500" cy="640" r="260" fill="url(#glowDeep)" opacity="0.45"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M-20 540 C 220 480, 380 620, 620 520 S 940 460, 1020 500" stroke-width="3"/>
             </g>
-            <g fill="none" stroke="url(#strokeDeep)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M280 620 L280 900 Q280 950 330 950 L620 950 Q670 950 670 900 L670 620"/>
-              <path d="M240 640 Q240 560 320 560 L630 560 Q710 560 710 640 L710 760 Q710 800 670 800 L280 800 Q240 800 240 760 Z"/>
-              <path d="M280 950 L260 1020"/>
-              <path d="M670 950 L690 1020"/>
-            </g>
-            <g transform="translate(720,700)" fill="none" stroke="#2C8C7C" stroke-width="7" stroke-linecap="round">
+            <g transform="translate(700,760)" fill="none" stroke="#2C8C7C" stroke-width="7" stroke-linecap="round" opacity="0.75">
               <path d="M40 380 L40 120"/>
-              <path d="M40 260 C-10 220 -20 140 20 90 C40 150 40 200 40 260 Z" fill="#2C8C7C" fill-opacity="0.25"/>
-              <path d="M40 190 C90 150 100 80 70 30 C40 90 30 140 40 190 Z" fill="#2C8C7C" fill-opacity="0.25"/>
+              <path d="M40 260 C-10 220 -20 140 20 90 C40 150 40 200 40 260 Z" fill="#2C8C7C" fill-opacity="0.22"/>
+              <path d="M40 190 C90 150 100 80 70 30 C40 90 30 140 40 190 Z" fill="#2C8C7C" fill-opacity="0.22"/>
             </g>
+            <rect width="1000" height="1200" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
@@ -544,32 +461,21 @@
       </blockquote>
       <div class="float-wrap story-image" data-parallax="0.06" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 900 1100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a figure stretching outdoors in soft morning light, representing restored vitality">
+          <svg class="illustration" viewBox="0 0 900 1100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition evoking restored vitality">
             <rect width="900" height="1100" fill="url(#gradWarm)"/>
-            <g stroke="#C9A47C" stroke-width="5" opacity="0.55" stroke-linecap="round">
-              <path d="M450 160 L450 60"/>
-              <path d="M450 160 L520 90"/>
-              <path d="M450 160 L380 90"/>
-              <path d="M450 160 L540 140"/>
-              <path d="M450 160 L360 140"/>
+            <circle cx="500" cy="280" r="380" fill="url(#glowMint)"/>
+            <circle cx="300" cy="880" r="340" fill="url(#glowClay)"/>
+            <circle cx="600" cy="620" r="260" fill="url(#glowDeep)" opacity="0.45"/>
+            <circle cx="450" cy="480" r="200" fill="url(#glowCream)" opacity="0.6"/>
+            <g fill="none" stroke="url(#strokeDeep)" stroke-linecap="round" opacity="0.4">
+              <path d="M-20 620 C 220 560, 380 700, 620 600 S 860 540, 920 580" stroke-width="3"/>
             </g>
-            <g transform="translate(458,482)" fill="none" stroke="#164F45" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.3" filter="url(#iconShadow)">
-              <circle cx="0" cy="-210" r="46"/>
-              <path d="M0 -164 L0 30"/>
-              <path d="M0 -120 L-130 -230"/>
-              <path d="M0 -120 L130 -230"/>
-              <path d="M0 30 L-90 220"/>
-              <path d="M0 30 L90 220"/>
+            <g fill="#1D6357" opacity="0.4">
+              <circle cx="300" cy="360" r="8"/>
+              <circle cx="380" cy="300" r="6"/>
+              <circle cx="600" cy="820" r="9"/>
             </g>
-            <g transform="translate(450,470)" fill="none" stroke="url(#strokeDeep)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="0" cy="-210" r="46"/>
-              <path d="M0 -164 L0 30"/>
-              <path d="M0 -120 L-130 -230"/>
-              <path d="M0 -120 L130 -230"/>
-              <path d="M0 30 L-90 220"/>
-              <path d="M0 30 L90 220"/>
-            </g>
-            <circle cx="450" cy="960" r="220" fill="url(#glowClay)"/>
+            <rect width="900" height="1100" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
@@ -579,12 +485,11 @@
   <!-- ============ 9. BOOK YOUR APPOINTMENT ============ -->
   <section class="book bleed" id="book">
     <div class="book-bg">
-      <svg class="illustration" viewBox="0 0 1800 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a sunlit corridor archway flanked by plants">
+      <svg class="illustration" viewBox="0 0 1800 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition, warm and inviting">
         <rect width="1800" height="1000" fill="url(#gradWarm)"/>
-        <circle cx="900" cy="260" r="420" fill="url(#glowMint)"/>
-        <g fill="none" stroke="url(#strokeDeep)" stroke-width="12">
-          <path d="M700 1000 L700 500 Q700 340 900 340 Q1100 340 1100 500 L1100 1000"/>
-        </g>
+        <circle cx="900" cy="260" r="480" fill="url(#glowMint)"/>
+        <circle cx="1400" cy="700" r="360" fill="url(#glowClay)"/>
+        <circle cx="400" cy="700" r="320" fill="url(#glowDeep)" opacity="0.4"/>
         <g transform="translate(430,620)" fill="none" stroke="#2C8C7C" stroke-width="8" stroke-linecap="round">
           <path d="M60 380 L60 100"/>
           <path d="M60 220 C0 180 -20 90 30 30 C55 100 60 160 60 220 Z" fill="#2C8C7C" fill-opacity="0.25"/>
@@ -595,6 +500,7 @@
           <path d="M60 220 C120 180 140 90 90 30 C65 100 60 160 60 220 Z" fill="#2C8C7C" fill-opacity="0.25"/>
           <path d="M60 150 C0 110 -15 30 25 -30 C65 40 75 100 60 150 Z" fill="#2C8C7C" fill-opacity="0.25"/>
         </g>
+        <rect width="1800" height="1000" filter="url(#grain)"/>
       </svg>
       <div class="book-scrim"></div>
     </div>
@@ -637,26 +543,23 @@
       </div>
       <div class="float-wrap footer-visual" data-parallax="0.05" data-depth data-reveal>
         <div class="tilt" data-tilt>
-          <svg class="illustration" viewBox="0 0 900 1100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Illustration of a welcoming entrance doorway with a sun glow above and plants alongside">
+          <svg class="illustration" viewBox="0 0 900 1100" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Soft abstract gradient composition with a warm sunlit glow">
             <rect width="900" height="1100" fill="url(#gradWarm)"/>
-            <circle cx="450" cy="220" r="130" fill="#E8C98F" opacity="0.7"/>
-            <g stroke="#C9A47C" stroke-width="6" opacity="0.55" stroke-linecap="round">
+            <circle cx="450" cy="260" r="340" fill="#E8C98F" opacity="0.55"/>
+            <circle cx="620" cy="700" r="320" fill="url(#glowMint)"/>
+            <circle cx="240" cy="880" r="280" fill="url(#glowClay)"/>
+            <g stroke="#C9A47C" stroke-width="6" opacity="0.5" stroke-linecap="round">
               <path d="M450 60 L450 10"/>
               <path d="M340 100 L305 65"/>
               <path d="M560 100 L595 65"/>
               <path d="M280 220 L225 220"/>
               <path d="M620 220 L675 220"/>
             </g>
-            <g fill="none" stroke="#164F45" stroke-width="11" opacity="0.3" filter="url(#iconShadow)" transform="translate(8,12)">
-              <path d="M310 1000 L310 560 Q310 420 450 420 Q590 420 590 560 L590 1000"/>
-            </g>
-            <g fill="none" stroke="url(#strokeDeep)" stroke-width="11">
-              <path d="M310 1000 L310 560 Q310 420 450 420 Q590 420 590 560 L590 1000"/>
-            </g>
-            <g transform="translate(120,700)" fill="none" stroke="#2C8C7C" stroke-width="7" stroke-linecap="round">
+            <g transform="translate(120,700)" fill="none" stroke="#2C8C7C" stroke-width="7" stroke-linecap="round" opacity="0.8">
               <path d="M50 300 L50 60"/>
-              <path d="M50 170 C0 140 -15 70 25 20 C48 80 50 130 50 170 Z" fill="#2C8C7C" fill-opacity="0.25"/>
+              <path d="M50 170 C0 140 -15 70 25 20 C48 80 50 130 50 170 Z" fill="#2C8C7C" fill-opacity="0.22"/>
             </g>
+            <rect width="900" height="1100" filter="url(#grain)"/>
           </svg>
         </div>
       </div>
