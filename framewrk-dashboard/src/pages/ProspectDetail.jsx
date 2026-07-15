@@ -6,6 +6,7 @@ import Button from '../components/Button'
 import StatusBadge from '../components/StatusBadge'
 import { api } from '../lib/api'
 import { PRICE_LABELS } from '../lib/pricing'
+import { actionUrgency, actionDateLabel } from '../lib/nextAction'
 
 const BUILD_STAGES = [
   { key: 'queued', label: 'Queued' },
@@ -97,6 +98,112 @@ const LOST_REASONS = [
   { key: 'chose_competitor', label: 'Chose a competitor' },
   { key: 'other', label: 'Other' },
 ]
+
+const URGENCY_STYLE = {
+  overdue: 'border-danger text-danger',
+  today: 'border-info text-info',
+  upcoming: 'border-line text-muted',
+}
+
+function NextActionPanel({ prospect, onSaved }) {
+  const [editing, setEditing] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState(null)
+  const [form, setForm] = useState({
+    next_action: prospect.next_action ?? '',
+    next_action_date: prospect.next_action_date ?? '',
+  })
+
+  function startEditing() {
+    setForm({
+      next_action: prospect.next_action ?? '',
+      next_action_date: prospect.next_action_date ?? '',
+    })
+    setError(null)
+    setEditing(true)
+  }
+
+  async function handleSave(e) {
+    e.preventDefault()
+    setSaving(true)
+    setError(null)
+    try {
+      await api.updateProspect(prospect.id, {
+        next_action: form.next_action.trim() || null,
+        next_action_date: form.next_action_date || null,
+      })
+      await onSaved()
+      setEditing(false)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (editing) {
+    return (
+      <Panel className="p-6">
+        <div className="label-caps mb-4">Next action</div>
+        <form onSubmit={handleSave} className="space-y-3">
+          <div>
+            <label className="text-faint font-mono text-xs block mb-1">what's next</label>
+            <input
+              type="text"
+              value={form.next_action}
+              onChange={(e) => setForm({ ...form, next_action: e.target.value })}
+              placeholder="e.g. follow-up call, send proposal"
+              className="w-full bg-surface border border-line px-3 py-2 font-mono text-sm text-ink placeholder:text-faint focus:outline-none focus:border-acid"
+            />
+          </div>
+          <div>
+            <label className="text-faint font-mono text-xs block mb-1">due</label>
+            <input
+              type="date"
+              value={form.next_action_date}
+              onChange={(e) => setForm({ ...form, next_action_date: e.target.value })}
+              className="w-full bg-surface border border-line px-3 py-2 font-mono text-sm text-ink focus:outline-none focus:border-acid"
+            />
+          </div>
+          {error && <div className="text-xs text-danger font-mono">{error}</div>}
+          <div className="flex gap-2 pt-1">
+            <Button type="submit" disabled={saving}>
+              {saving ? 'Saving…' : 'Save'}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => setEditing(false)} disabled={saving}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Panel>
+    )
+  }
+
+  const urgency = actionUrgency(prospect.next_action_date)
+
+  return (
+    <Panel className={`p-6 border-2 ${urgency ? URGENCY_STYLE[urgency] : 'border-line'}`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="label-caps">Next action</div>
+        <Button variant="ghost" onClick={startEditing}>
+          Edit
+        </Button>
+      </div>
+      {prospect.next_action || prospect.next_action_date ? (
+        <div>
+          <div className="text-ink text-sm">{prospect.next_action || 'No description'}</div>
+          {prospect.next_action_date && (
+            <div className={`font-mono text-xs mt-1 ${urgency ? URGENCY_STYLE[urgency].split(' ')[1] : 'text-faint'}`}>
+              {prospect.next_action_date} · {actionDateLabel(prospect.next_action_date)}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="font-mono text-sm text-muted">Nothing scheduled — click Edit to set one.</div>
+      )}
+    </Panel>
+  )
+}
 
 function BusinessInfoPanel({ prospect, onSaved }) {
   const [editing, setEditing] = useState(false)
@@ -558,6 +665,10 @@ export default function ProspectDetail() {
 
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-1 space-y-6">
+          {prospect.status !== 'closed_lost' && (
+            <NextActionPanel prospect={prospect} onSaved={load} />
+          )}
+
           <BusinessInfoPanel prospect={prospect} onSaved={load} />
 
           <Panel className="p-6 space-y-3">

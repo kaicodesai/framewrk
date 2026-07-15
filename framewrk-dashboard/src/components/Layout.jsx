@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { api } from '../lib/api'
+import { actionUrgency } from '../lib/nextAction'
 
 const NAV = [
-  { to: '/', label: 'Pipeline', end: true },
+  { to: '/', label: 'Pipeline', end: true, badgeKey: 'needsAction' },
   { to: '/outreach', label: 'Outreach', badgeKey: 'needsOutreach' },
   { to: '/handovers', label: 'Handovers' },
   { to: '/metrics', label: 'Metrics' },
@@ -37,6 +38,7 @@ function NavItem({ to, label, end, badge }) {
 
 export default function Layout() {
   const [needsOutreach, setNeedsOutreach] = useState(0)
+  const [needsAction, setNeedsAction] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -45,9 +47,14 @@ export default function Layout() {
       try {
         const prospects = await api.listProspects()
         if (!cancelled) {
-          const count = prospects.filter((p) => p.status === 'outreach_ready').length
-          setNeedsOutreach(count)
-          document.title = count > 0 ? `(${count}) Framewrk` : 'Framewrk'
+          const outreachCount = prospects.filter((p) => p.status === 'outreach_ready').length
+          const actionCount = prospects.filter(
+            (p) => p.status !== 'closed_lost' && ['overdue', 'today'].includes(actionUrgency(p.next_action_date))
+          ).length
+          setNeedsOutreach(outreachCount)
+          setNeedsAction(actionCount)
+          const total = outreachCount + actionCount
+          document.title = total > 0 ? `(${total}) Framewrk` : 'Framewrk'
         }
       } catch {
         // Silent — this is a passive signal, not worth surfacing a fetch error for.
@@ -62,7 +69,7 @@ export default function Layout() {
     }
   }, [])
 
-  const badges = { needsOutreach }
+  const badges = { needsOutreach, needsAction }
 
   return (
     <div className="min-h-screen bg-paper grid-noise">

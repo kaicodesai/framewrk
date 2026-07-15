@@ -8,6 +8,7 @@ import StatusBadge from '../components/StatusBadge'
 import { api } from '../lib/api'
 import { statusInfo } from '../lib/status'
 import { parseProspectsCsv } from '../lib/csv'
+import { actionUrgency, actionDateLabel } from '../lib/nextAction'
 
 const PROSPECT_STATUSES = [
   'submitted',
@@ -202,6 +203,10 @@ export default function Pipeline() {
     { total: 0, building: 0, ready: 0, paid: 0 }
   )
 
+  const needsAction = prospects
+    .filter((p) => p.status !== 'closed_lost' && ['overdue', 'today'].includes(actionUrgency(p.next_action_date)))
+    .sort((a, b) => new Date(a.next_action_date) - new Date(b.next_action_date))
+
   const searchLower = search.trim().toLowerCase()
   const visibleProspects = sortProspects(
     prospects.filter((p) => {
@@ -217,6 +222,36 @@ export default function Pipeline() {
   return (
     <div>
       <PageHeader eyebrow="Home base" title="Pipeline" />
+
+      {needsAction.length > 0 && (
+        <Panel className="p-6 mb-10 border-2 border-danger">
+          <div className="label-caps mb-4 text-danger">
+            Needs action — {needsAction.length} overdue or due today
+          </div>
+          <div className="flex flex-col gap-3">
+            {needsAction.map((p) => {
+              const urgency = actionUrgency(p.next_action_date)
+              return (
+                <Link
+                  key={p.id}
+                  to={`/prospects/${p.id}`}
+                  className="flex items-center justify-between gap-4 hover:bg-surface-hover px-2 py-1 -mx-2 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <span className="text-ink font-medium">{p.business_name || 'Unnamed business'}</span>
+                    <span className="font-mono text-xs text-muted"> — {p.next_action || 'follow up'}</span>
+                  </div>
+                  <span
+                    className={`font-mono text-xs shrink-0 ${urgency === 'overdue' ? 'text-danger' : 'text-info'}`}
+                  >
+                    {actionDateLabel(p.next_action_date)}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </Panel>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
         <StatTile label="Total prospects" value={counts.total} />

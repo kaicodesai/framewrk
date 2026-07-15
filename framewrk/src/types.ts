@@ -74,9 +74,14 @@ export interface Prospect {
   // Categorical reason captured on markProspectLost — freeform detail still
   // belongs in `notes`, this stays a short fixed set for reportable metrics.
   lost_reason: string | null;
-  // Manually-tracked deal value in cents — not wired to Stripe yet, but
-  // lets win-rate/revenue metrics be answerable ahead of that integration.
+  // Deal value in cents — stamped automatically from fixed per-tier pricing
+  // when a build starts (see lib/pricing.ts), never manually entered.
   deal_value_cents: number | null;
+  // What's next on this prospect and when it's due — surfaced on the
+  // Pipeline "needs action" list so a deal never goes cold silently.
+  // Cleared automatically when a prospect is marked lost.
+  next_action: string | null;
+  next_action_date: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -179,6 +179,8 @@ export async function getProspect(env: Env, id: string): Promise<Response> {
   return json({ ...prospect, builds, activities });
 }
 
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
 export async function updateProspect(request: Request, env: Env, id: string): Promise<Response> {
   const body = (await request.json().catch(() => null)) as
     | {
@@ -187,23 +189,37 @@ export async function updateProspect(request: Request, env: Env, id: string): Pr
         address?: string;
         phone?: string;
         notes?: string;
+        next_action?: string | null;
+        next_action_date?: string | null;
       }
     | null;
   if (!body) return badRequest("Request body must be JSON");
 
+  if (
+    body.next_action_date !== undefined &&
+    body.next_action_date !== null &&
+    (!DATE_RE.test(body.next_action_date) || Number.isNaN(Date.parse(body.next_action_date)))
+  ) {
+    return badRequest("next_action_date must be an ISO date (YYYY-MM-DD) or null");
+  }
+
   // deal_value_cents is deliberately not editable here — fixed pricing means
   // it's derived from the build's service_tier (see startBuild) and should
   // never be a manual guess.
-  const fields: [string, string | undefined][] = [
+  const fields: [string, string | null | undefined][] = [
     ["business_name", body.business_name],
     ["category", body.category],
     ["address", body.address],
     ["phone", body.phone],
     ["notes", body.notes],
+    ["next_action", body.next_action],
+    ["next_action_date", body.next_action_date],
   ];
   const toUpdate = fields.filter(([, value]) => value !== undefined);
   if (toUpdate.length === 0) {
-    return badRequest("At least one of business_name, category, address, phone, notes is required");
+    return badRequest(
+      "At least one of business_name, category, address, phone, notes, next_action, next_action_date is required"
+    );
   }
 
   const setClause = toUpdate.map(([column]) => `${column} = ?`).join(", ");
@@ -232,7 +248,10 @@ export async function markProspectLost(request: Request, env: Env, id: string): 
   }
 
   const result = await env.DB.prepare(
-    "UPDATE prospects SET status = 'closed_lost', lost_reason = ?, updated_at = ? WHERE id = ?"
+    `UPDATE prospects
+     SET status = 'closed_lost', lost_reason = ?, next_action = NULL, next_action_date = NULL,
+         updated_at = ?
+     WHERE id = ?`
   )
     .bind(body.reason ?? null, nowIso(), id)
     .run();
