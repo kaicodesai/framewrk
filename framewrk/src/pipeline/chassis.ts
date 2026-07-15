@@ -42,6 +42,11 @@ SPATIAL 3D DEPTH (this site's signature futuristic quality):
   loop) so panels feel alive even without cursor/scroll interaction.
 - All of this is plain CSS + vanilla JS only — no WebGL, no three.js, no
   canvas libraries, no build step.
+- Respect \`prefers-reduced-motion\`: when set, disable all tilt/parallax
+  motion entirely (elements render in their resting position, no listeners
+  attached). On touch devices, disable cursor-tilt outright (no cursor
+  exists) and keep scroll-parallax simplified — fewer simultaneously
+  animated layers — to protect performance on lower-end phones.
 
 DEPTH & DIMENSIONALITY:
 - Layer elements (cards, images, UI snippets) at slightly different apparent
