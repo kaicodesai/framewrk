@@ -30,41 +30,103 @@ function parseCsvLine(line) {
   return result.map((s) => s.trim())
 }
 
-const COLUMN_ALIASES = {
-  business_name: 'business_name',
-  name: 'business_name',
-  business: 'business_name',
-  category: 'category',
-  address: 'address',
-  phone: 'phone',
-  notes: 'notes',
-  note: 'notes',
+function normalizeHeader(cell) {
+  return cell.trim().toLowerCase().replace(/\s+/g, ' ')
 }
 
-// Parses CSV text into an array of { business_name, category, address, phone, notes }.
-// Recognizes a header row via COLUMN_ALIASES; falls back to a fixed column
-// order (business_name, category, address, phone, notes) if no header matches.
+// Covers our own field names plus the header variants that actually show up
+// in Google Sheets exports (Maps-scrape lists) and Apollo.io CSV exports —
+// the two real sources this gets uploaded from. Any column not listed here
+// is simply ignored per row (Apollo exports carry many irrelevant columns:
+// email, LinkedIn, seniority, etc.).
+const COLUMN_ALIASES = {
+  business_name: 'business_name',
+  'business name': 'business_name',
+  name: 'business_name',
+  business: 'business_name',
+  company: 'business_name',
+  'company name': 'business_name',
+  organization: 'business_name',
+  'organization name': 'business_name',
+  'account name': 'business_name',
+
+  category: 'category',
+  industry: 'category',
+  type: 'category',
+  'business category': 'category',
+
+  address: 'address',
+  'company address': 'address',
+  'full address': 'address',
+  'street address': 'address',
+  street: 'address',
+
+  phone: 'phone',
+  'phone number': 'phone',
+  'company phone': 'phone',
+  'corporate phone': 'phone',
+  'work direct phone': 'phone',
+  'mobile phone': 'phone',
+  'home phone': 'phone',
+  'other phone': 'phone',
+  'primary phone': 'phone',
+
+  notes: 'notes',
+  note: 'notes',
+  keywords: 'notes',
+  description: 'notes',
+}
+
+// Parses CSV text into { rows, headerRecognized, unrecognizedHeaders }.
+// Requires a header row that includes at least one recognized column — if
+// nothing is recognized, returns headerRecognized: false with the raw
+// headers found instead of guessing a column order, since guessing wrong
+// would silently import garbage rows.
 export function parseProspectsCsv(text) {
   const lines = text.split(/\r\n|\r|\n/).filter((line) => line.trim() !== '')
-  if (lines.length === 0) return []
+  if (lines.length === 0) return { rows: [], headerRecognized: true, unrecognizedHeaders: [] }
 
-  const firstRow = parseCsvLine(lines[0]).map((cell) => cell.toLowerCase())
-  const headerFields = firstRow.map((cell) => COLUMN_ALIASES[cell])
-  const hasRecognizedHeader = headerFields.some(Boolean)
+  const rawHeaders = parseCsvLine(lines[0])
+  const headerCells = rawHeaders.map(normalizeHeader)
+  const fieldMap = headerCells.map((h) => COLUMN_ALIASES[h])
+  const headerRecognized = fieldMap.some(Boolean)
 
-  const fieldOrder = hasRecognizedHeader
-    ? headerFields
-    : ['business_name', 'category', 'address', 'phone', 'notes']
-  const dataLines = hasRecognizedHeader ? lines.slice(1) : lines
+  if (!headerRecognized) {
+    return { rows: [], headerRecognized: false, unrecognizedHeaders: rawHeaders }
+  }
 
-  return dataLines.map((line) => {
+  const findFirstIndex = (candidates) => {
+    for (const name of candidates) {
+      const idx = headerCells.indexOf(name)
+      if (idx >= 0) return idx
+    }
+    return -1
+  }
+  // Prefer company-prefixed city/state over a bare "City"/"State" column,
+  // since Apollo exports both (the contact's location vs. the company's).
+  const cityIdx = findFirstIndex(['company city', 'city'])
+  const stateIdx = findFirstIndex(['company state', 'state'])
+  const websiteIdx = headerCells.indexOf('website')
+
+  const rows = lines.slice(1).map((line) => {
     const cells = parseCsvLine(line)
     const row = {}
-    fieldOrder.forEach((field, i) => {
-      if (field && cells[i] !== undefined && cells[i] !== '') {
-        row[field] = cells[i]
-      }
+    fieldMap.forEach((field, i) => {
+      if (field && cells[i] && !row[field]) row[field] = cells[i]
     })
+
+    if (!row.address && (cityIdx >= 0 || stateIdx >= 0)) {
+      const city = cityIdx >= 0 ? cells[cityIdx] : ''
+      const state = stateIdx >= 0 ? cells[stateIdx] : ''
+      if (city || state) row.address = [city, state].filter(Boolean).join(', ')
+    }
+
+    if (websiteIdx >= 0 && cells[websiteIdx]) {
+      row.notes = row.notes ? `${row.notes} | website: ${cells[websiteIdx]}` : `website: ${cells[websiteIdx]}`
+    }
+
     return row
   })
+
+  return { rows, headerRecognized: true, unrecognizedHeaders: [] }
 }

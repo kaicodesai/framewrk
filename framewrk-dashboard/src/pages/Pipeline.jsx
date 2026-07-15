@@ -49,7 +49,7 @@ function BulkImportPanel({ onImported }) {
   const [error, setError] = useState(null)
   const [result, setResult] = useState(null)
 
-  const rows = parseProspectsCsv(csvText)
+  const { rows, headerRecognized, unrecognizedHeaders } = parseProspectsCsv(csvText)
   const validRows = rows.filter((r) => r.business_name)
   const missingNameCount = rows.length - validRows.length
 
@@ -81,8 +81,10 @@ function BulkImportPanel({ onImported }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="text-xs text-muted font-mono">
-        Paste CSV or upload a file. Columns: business_name (required), category, address, phone,
-        notes — header row optional; if omitted, that's the assumed column order.
+        Paste CSV or upload a file — works with a Google Sheets / Maps-scrape export or an
+        Apollo.io export as-is (Company/Industry/Corporate Phone/Company Address etc. are all
+        recognized), or your own business_name/category/address/phone/notes columns. Needs a
+        header row.
       </div>
       <input
         type="file"
@@ -102,15 +104,24 @@ function BulkImportPanel({ onImported }) {
       />
       <div className="flex items-center justify-between">
         <span className="font-mono text-xs text-muted">
-          {rows.length === 0
+          {csvText.trim() === ''
             ? 'no rows yet'
-            : `${validRows.length} row${validRows.length === 1 ? '' : 's'} ready` +
-              (missingNameCount > 0 ? ` · ${missingNameCount} skipped (missing business_name)` : '')}
+            : !headerRecognized
+              ? "couldn't recognize any columns in the header — see below"
+              : `${validRows.length} row${validRows.length === 1 ? '' : 's'} ready` +
+                (missingNameCount > 0 ? ` · ${missingNameCount} skipped (missing business_name)` : '')}
         </span>
         <Button type="button" disabled={submitting || validRows.length === 0} onClick={handleImport}>
           {submitting ? 'Importing…' : `Import ${validRows.length || ''}`.trim()}
         </Button>
       </div>
+      {csvText.trim() !== '' && !headerRecognized && (
+        <div className="text-xs text-danger font-mono">
+          Didn't recognize any of these header columns: {unrecognizedHeaders.join(', ')}. Rename at
+          least one to something like business_name/company, category/industry, address, or
+          phone — nothing was imported.
+        </div>
+      )}
       {error && <div className="text-xs text-danger font-mono">{error}</div>}
       {result && (
         <div className="text-xs text-acid-text font-mono">
